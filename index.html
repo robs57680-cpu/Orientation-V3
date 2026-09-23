@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chrono course d'orientation</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f2f4ea;--card:#fff;--tx:#20301c;--mut:#67765e;--ac:#e8720c;--acx:#fff;--st:#c0392b;--bd:#dde3d2;--h1:#1b3e1f;--h2:#2f6b3a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10160d;--card:#1b2418;--tx:#e7ecdf;--mut:#94a389;--ac:#f2860f;--acx:#1b1200;--st:#e5675a;--bd:#2b3626;--h1:#0d1f0f;--h2:#173e1c}}
+:root[data-theme="dark"]{--bg:#10160d;--card:#1b2418;--tx:#e7ecdf;--mut:#94a389;--ac:#f2860f;--acx:#1b1200;--st:#e5675a;--bd:#2b3626;--h1:#0d1f0f;--h2:#173e1c}
+*{box-sizing:border-box}
+body{margin:0;color:var(--tx);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:
+    radial-gradient(circle at 10% 90%, color-mix(in srgb, var(--ac) 12%, transparent) 0, transparent 30%),
+    repeating-radial-gradient(circle at 85% 12%, color-mix(in srgb, var(--h2) 14%, transparent) 0 3px, transparent 3px 16px),
+    var(--bg)}
+header{position:relative;overflow:hidden;padding:16px 16px 14px;border-radius:0 0 24px 24px;background:linear-gradient(135deg,var(--h2),var(--h1));box-shadow:0 4px 14px rgba(13,40,15,.3)}
+header::after{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.06) 0 9px, transparent 9px 20px);pointer-events:none}
+header::before{content:"🧭";position:absolute;right:-6px;top:-14px;font-size:70px;opacity:.16;transform:rotate(8deg)}
+h1{font-size:20px;margin:0 0 6px;color:#fff;position:relative;text-shadow:0 1px 3px rgba(0,0,0,.25)}
+.back{background:none;border:0;color:#fff;font:inherit;font-weight:700;padding:0 0 10px;opacity:.9;position:relative}
+nav{display:flex;gap:6px;position:relative}
+nav button{flex:1;padding:10px 4px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.14);color:#fff;border-radius:10px;font:inherit;font-weight:600}
+nav button.on{background:#fff;color:var(--h1);border-color:#fff}
+main{padding:14px 16px 40px;max-width:720px;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.card.run{border-color:var(--ac);border-width:2px;box-shadow:0 0 0 3px color-mix(in srgb, var(--ac) 18%, transparent)}
+.nm{font-weight:700;font-size:17px;overflow-wrap:anywhere}
+.tm{font-variant-numeric:tabular-nums;font-size:24px;font-weight:700;min-height:30px}
+.tm.mut{color:var(--mut)}
+button.b{padding:12px;border:0;border-radius:10px;font:inherit;font-weight:700;background:var(--ac);color:var(--acx)}
+button.b.stop{background:var(--st);color:#fff}
+button.b.sec{background:transparent;color:var(--mut);border:1px solid var(--bd);font-weight:600}
+.x{background:none;border:0;color:var(--mut);font-size:13px;padding:2px;text-align:left}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden}
+th,td{padding:10px;text-align:left;border-bottom:1px solid var(--bd);font-variant-numeric:tabular-nums}
+th{font-size:13px;color:var(--mut)}
+.scroll{overflow-x:auto}
+textarea{width:100%;min-height:200px;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit}
+input[type=text]{padding:11px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit;flex:1;min-width:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
+.hint{color:var(--mut);font-size:14px}
+.classrow{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:10px}
+.classrow button.go{flex:1;background:none;border:0;text-align:left;font:inherit;color:var(--tx);padding:0}
+.classrow .cn{font-weight:800;font-size:18px}
+.classrow .cs{color:var(--mut);font-size:13px;margin-top:2px}
+.ovl{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.confirmbox{background:var(--card);border-radius:20px;padding:22px 20px;width:300px;max-width:100%;text-align:center}
+.dial{width:172px;height:172px;border-radius:50%;margin:0 auto 14px;background:conic-gradient(#fff 0 90deg, var(--ac) 90deg 180deg, #fff 180deg 270deg, var(--ac) 270deg 360deg);border:4px solid var(--tx);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.2)}
+.dial .inner{width:126px;height:126px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px}
+.dial .who{font-size:20px;font-weight:800;overflow-wrap:anywhere;line-height:1.15;color:var(--tx)}
+.dial .tm2{font-variant-numeric:tabular-nums;font-size:14px;color:var(--mut);margin-top:4px}
+.confirmbox .q{font-size:17px;font-weight:700;margin:0 0 14px}
+.confirmrow{display:flex;gap:8px}
+.confirmrow .b{flex:1}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+<h1>🧭 Chrono course d'orientation</h1>
+<div id="subnav"></div>
+</header>
+<main>
+<section id="home"></section>
+<section id="chrono" hidden></section>
+<section id="res" hidden></section>
+<section id="els" hidden></section>
+</main>
+<div id="modal"></div>
+<script>
+const KEY='co-chrono-v2';
+let S={classes:[]};
+try{
+  const r2=localStorage.getItem(KEY);
+  if(r2){S=JSON.parse(r2)}
+  else{
+    const r1=localStorage.getItem('co-chrono-v1');
+    if(r1){const old=JSON.parse(r1);S={classes:[{id:'c'+Date.now().toString(36),name:'Classe 1',students:old.students||[],runs:old.runs||[]}]}}
+  }
+}catch(e){}
+S.classes=S.classes||[];
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const $=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,'0');
+function fmt(ms){const t=Math.max(0,Math.floor(ms/100));return Math.floor(t/600)+':'+pad(Math.floor(t%600/10))+'.'+t%10}
+function h(tag,attrs,...kids){const e=document.createElement(tag);for(const k in attrs||{}){if(k==='on')e.onclick=attrs[k];else e.setAttribute(k,attrs[k])}kids.flat().forEach(c=>e.append(c));return e}
+const live=(C,id)=>C.runs.find(r=>r.sid===id&&r.end==null);
+const fin=(C,id)=>C.runs.filter(r=>r.sid===id&&r.end!=null);
+const dur=r=>r.end-r.start;
+let view='home',currentClassId=null,confirmStop=null,confirmTimer=null;
+function curClass(){return S.classes.find(c=>c.id===currentClassId)}
+
+function arm(btn,label,fn){let a=false;btn.onclick=()=>{if(!a){a=true;btn.textContent='Sûr ?';setTimeout(()=>{a=false;btn.textContent=label},3000);return}fn()}}
+
+/* ---------- Accueil : choix de la classe ---------- */
+function renderHome(){
+  const el=$('#home');el.replaceChildren();
+  if(!S.classes.length){el.append(h('p',{class:'hint'},'Ajoute une première classe ci-dessous.'))}
+  S.classes.forEach(c=>{
+    const go=h('button',{class:'go',on:()=>{currentClassId=c.id;show('chrono')}},
+      h('div',{class:'cn'},c.name),h('div',{class:'cs'},c.students.length+' élève'+(c.students.length>1?'s':'')+' · '+c.runs.filter(r=>r.end!=null).length+' temps enregistré'+(c.runs.filter(r=>r.end!=null).length>1?'s':'')));
+    const del=h('button',{class:'x'},'✕');
+    arm(del,'✕',()=>{S.classes=S.classes.filter(x=>x!==c);save();renderHome()});
+    el.append(h('div',{class:'classrow'},go,del));
+  });
+  const inp=h('input',{type:'text',placeholder:'Nom de la nouvelle classe'});
+  const add=()=>{
+    const name=inp.value.trim();if(!name)return;
+    const c={id:'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name,students:[],runs:[]};
+    S.classes.push(c);save();inp.value='';renderHome();
+  };
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')add()});
+  el.append(h('div',{class:'row'},inp,h('button',{class:'b',on:add},'Ajouter')));
+}
+
+/* ---------- Sous-navigation dans une classe ---------- */
+function renderSubnav(){
+  const sn=$('#subnav');sn.replaceChildren();
+  if(view==='home'){sn.hidden=true;return}
+  sn.hidden=false;
+  const C=curClass();
+  sn.append(h('button',{class:'back',on:()=>{currentClassId=null;show('home')}},'← Classes · '+(C?C.name:'')));
+  const nv=h('nav',{});
+  [['chrono','Chrono'],['res','🗺️ Résultats'],['els','🚩 Élèves']].forEach(([v,l])=>nv.append(h('button',{class:view===v?'on':'',on:()=>show(v)},l)));
+  sn.append(nv);
+}
+
+/* ---------- Confirmation d'arrêt ---------- */
+function askStop(s,r){confirmStop={s,r};renderModal()}
+function closeConfirm(){confirmStop=null;if(confirmTimer){clearInterval(confirmTimer);confirmTimer=null}renderModal()}
+function renderModal(){
+  const m=$('#modal');m.replaceChildren();
+  if(confirmTimer){clearInterval(confirmTimer);confirmTimer=null}
+  if(!confirmStop)return;
+  const {s,r}=confirmStop;
+  const tmEl=h('div',{class:'tm2'},fmt(Date.now()-r.start));
+  const dial=h('div',{class:'dial'},h('div',{class:'inner'},h('div',{class:'who'},s.name),tmEl));
+  confirmTimer=setInterval(()=>{if(confirmStop)tmEl.textContent=fmt(Date.now()-confirmStop.r.start)},100);
+  const yes=h('button',{class:'b stop',on:()=>{r.end=Date.now();save();closeConfirm();renderChrono()}},'Oui, arrêter');
+  const no=h('button',{class:'b sec',on:closeConfirm},'Continuer');
+  m.append(h('div',{class:'ovl',on:e=>{if(e.target===e.currentTarget)closeConfirm()}},
+    h('div',{class:'confirmbox'},dial,h('p',{class:'q'},'Arrêter le chrono ?'),h('div',{class:'confirmrow'},no,yes))));
+}
+
+/* ---------- Chrono ---------- */
+function renderChrono(){
+  const el=$('#chrono');el.replaceChildren();
+  const C=curClass();if(!C)return;
+  if(!C.students.length){el.append(h('p',{class:'hint'},'Ajoute d\u2019abord les prénoms dans l\u2019onglet « Élèves ».'));return}
+  const g=h('div',{class:'grid'});
+  C.students.forEach(s=>{
+    const r=live(C,s.id),d=fin(C,s.id),last=d[d.length-1];
+    const t=h('div',{class:'tm'+(r||last?'':' mut')},r?'0:00.0':last?fmt(dur(last)):'–');
+    if(r)t.dataset.start=r.start;
+    const btn=r?h('button',{class:'b stop',on:()=>askStop(s,r)},'Arrêter')
+               :h('button',{class:'b',on:()=>{C.runs.push({sid:s.id,start:Date.now(),end:null});save();renderChrono()}},last?'Nouveau départ':'Départ');
+    g.append(h('div',{class:'card'+(r?' run':'')},h('div',{class:'nm'},s.name),t,h('div',{class:'hint'},d.length?d.length+(d.length>1?' essais':' essai'):''),btn));
+  });
+  el.append(g);
+}
+
+/* ---------- Résultats ---------- */
+let sortBy='eleve';
+function renderRes(){
+  const el=$('#res');el.replaceChildren();
+  const C=curClass();if(!C)return;
+  const all=C.runs.filter(r=>r.end!=null).map(r=>({r,s:C.students.find(x=>x.id===r.sid)})).filter(x=>x.s).sort((a,b)=>a.r.start-b.r.start);
+  if(!all.length){el.append(h('p',{class:'hint'},'Aucun temps enregistré pour le moment.'));return}
+  const cnt={};all.forEach(x=>{cnt[x.s.id]=(cnt[x.s.id]||0)+1;x.n=cnt[x.s.id]});
+  const rows=[...all];
+  if(sortBy==='eleve')rows.sort((a,b)=>a.s.name.localeCompare(b.s.name,'fr')||a.r.start-b.r.start);
+  else if(sortBy==='temps')rows.sort((a,b)=>dur(a.r)-dur(b.r));
+  const seg=h('div',{class:'row'});
+  [['eleve','Par élève'],['temps','Par temps'],['date','Chronologique']].forEach(([k,l])=>seg.append(h('button',{class:'b'+(sortBy===k?'':' sec'),on:()=>{sortBy=k;renderRes()}},l)));
+  const tb=h('tbody');
+  rows.forEach(x=>{
+    const d=new Date(x.r.start);
+    const del=h('button',{class:'x'},'✕');
+    arm(del,'✕',()=>{C.runs=C.runs.filter(y=>y!==x.r);save();renderRes()});
+    tb.append(h('tr',{},h('td',{},x.s.name),h('td',{},'n°'+x.n),h('td',{},pad(d.getDate())+'/'+pad(d.getMonth()+1)+' '+pad(d.getHours())+':'+pad(d.getMinutes())),h('td',{},h('b',{},fmt(dur(x.r)))),h('td',{},del)));
+  });
+  el.append(seg,h('div',{class:'scroll'},h('table',{},h('thead',{},h('tr',{},h('th',{},'Élève'),h('th',{},'Essai'),h('th',{},'Départ'),h('th',{},'Temps'),h('th',{},''))),tb)));
+  const msg=h('p',{class:'hint'},'');
+  const ex=h('button',{class:'b',on:async()=>{
+    const lines=['Classe;Prénom;Essai;Date;Heure de départ;Temps (s);Temps'];
+    all.forEach(x=>{const d=new Date(x.r.start);
+      lines.push([C.name,x.s.name,x.n,d.toLocaleDateString('fr-FR'),pad(d.getHours())+':'+pad(d.getMinutes()),(dur(x.r)/1000).toFixed(1).replace('.',','),fmt(dur(x.r))].join(';'))});
+    try{const dl=await claude.use('downloads');if(!dl)throw 0;await dl.save({filename:'temps-course-orientation-'+C.name.replace(/[^a-z0-9]+/gi,'-')+'.csv',data:'\ufeff'+lines.join('\n')});msg.textContent='Fichier enregistré.'}
+    catch(e){if(e&&e.code==='declined')return;try{await navigator.clipboard.writeText(lines.join('\n'));msg.textContent='Copié dans le presse-papiers (à coller dans un tableur).'}catch(_){msg.textContent='Export indisponible sur cet appareil.'}}
+  }},'Exporter en CSV');
+  el.append(h('div',{class:'row'},ex),msg);
+}
+
+/* ---------- Élèves ---------- */
+function renderEls(){
+  const el=$('#els');el.replaceChildren();
+  const C=curClass();if(!C)return;
+  const ta=h('textarea',{placeholder:'Un prénom par ligne'});ta.value=C.students.map(s=>s.name).join('\n');
+  const msg=h('p',{class:'hint'},'');
+  const ok=h('button',{class:'b',on:()=>{
+    const names=[...new Set(ta.value.split('\n').map(x=>x.trim()).filter(Boolean))];
+    const old=C.students;
+    C.students=names.map(n=>old.find(o=>o.name===n)||{id:'s'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:n});
+    const ids=new Set(C.students.map(s=>s.id));C.runs=C.runs.filter(r=>ids.has(r.sid));
+    save();msg.textContent=names.length+' élèves enregistrés.';
+  }},'Enregistrer la liste');
+  const clr=h('button',{class:'b sec'},'Effacer tous les temps');
+  arm(clr,'Effacer tous les temps',()=>{C.runs=[];save();msg.textContent='Temps effacés.'});
+  el.append(h('p',{class:'hint'},'Un prénom par ligne. Les temps déjà enregistrés sont conservés pour les prénoms qui restent.'),ta,h('div',{class:'row'},ok,clr),msg,
+    h('p',{class:'hint'},'Les données sont stockées sur cet appareil, séparément pour chaque classe : utilise toujours le même téléphone ou la même tablette, et exporte en CSV pour garder une copie.'));
+}
+
+/* ---------- Navigation ---------- */
+function show(v){
+  view=v;
+  renderSubnav();
+  ['home','chrono','res','els'].forEach(i=>$('#'+i).hidden=i!==v);
+  ({home:renderHome,chrono:renderChrono,res:renderRes,els:renderEls})[v]();
+}
+show('home');
+setInterval(()=>{if(view==='chrono')document.querySelectorAll('[data-start]').forEach(e=>e.textContent=fmt(Date.now()-e.dataset.start))},100);
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+</script>
+</body>
+</html>
