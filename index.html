@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chrono course d'orientation</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f2f4ea;--card:#fff;--tx:#20301c;--mut:#67765e;--ac:#e8720c;--acx:#fff;--st:#c0392b;--bd:#dde3d2;--h1:#1b3e1f;--h2:#2f6b3a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10160d;--card:#1b2418;--tx:#e7ecdf;--mut:#94a389;--ac:#f2860f;--acx:#1b1200;--st:#e5675a;--bd:#2b3626;--h1:#0d1f0f;--h2:#173e1c}}
+:root[data-theme="dark"]{--bg:#10160d;--card:#1b2418;--tx:#e7ecdf;--mut:#94a389;--ac:#f2860f;--acx:#1b1200;--st:#e5675a;--bd:#2b3626;--h1:#0d1f0f;--h2:#173e1c}
+*{box-sizing:border-box}
+body{margin:0;color:var(--tx);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:
+    radial-gradient(circle at 10% 90%, color-mix(in srgb, var(--ac) 12%, transparent) 0, transparent 30%),
+    repeating-radial-gradient(circle at 85% 12%, color-mix(in srgb, var(--h2) 14%, transparent) 0 3px, transparent 3px 16px),
+    var(--bg)}
+header{position:relative;overflow:hidden;padding:16px 16px 14px;border-radius:0 0 24px 24px;background:linear-gradient(135deg,var(--h2),var(--h1));box-shadow:0 4px 14px rgba(13,40,15,.3)}
+header::after{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.06) 0 9px, transparent 9px 20px);pointer-events:none}
+header::before{content:"🧭";position:absolute;right:-6px;top:-14px;font-size:70px;opacity:.16;transform:rotate(8deg)}
+h1{font-size:20px;margin:0 0 6px;color:#fff;position:relative;text-shadow:0 1px 3px rgba(0,0,0,.25)}
+.back{background:none;border:0;color:#fff;font:inherit;font-weight:700;padding:0 0 10px;opacity:.9;position:relative}
+nav{display:flex;gap:6px;position:relative;overflow-x:auto}
+nav button{flex:1 0 auto;white-space:nowrap;padding:10px 10px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.14);color:#fff;border-radius:10px;font:inherit;font-weight:600}
+nav button.on{background:#fff;color:var(--h1);border-color:#fff}
+main{padding:14px 16px 40px;max-width:720px;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.card.run{border-color:var(--ac);border-width:2px;box-shadow:0 0 0 3px color-mix(in srgb, var(--ac) 18%, transparent)}
+.card.over{border-color:var(--st);border-width:2px;background:color-mix(in srgb, var(--st) 16%, var(--card));box-shadow:0 0 0 3px color-mix(in srgb, var(--st) 20%, transparent)}
+.card.over .tm{color:var(--st)}
+.ov{color:var(--st);font-weight:700}
+.corrow{display:grid;grid-template-columns:1fr 46px 1fr 30px 26px;gap:6px;align-items:center;margin-bottom:6px}
+.nm{font-weight:700;font-size:17px;overflow-wrap:anywhere}
+.tm{font-variant-numeric:tabular-nums;font-size:24px;font-weight:700;min-height:30px}
+.tm.mut{color:var(--mut)}
+button.b{padding:12px;border:0;border-radius:10px;font:inherit;font-weight:700;background:var(--ac);color:var(--acx)}
+button.b.stop{background:var(--st);color:#fff}
+button.b.sec{background:transparent;color:var(--mut);border:1px solid var(--bd);font-weight:600}
+.x{background:none;border:0;color:var(--mut);font-size:13px;padding:2px;text-align:left}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden}
+th,td{padding:10px;text-align:left;border-bottom:1px solid var(--bd);font-variant-numeric:tabular-nums}
+th{font-size:13px;color:var(--mut)}
+.scroll{overflow-x:auto}
+textarea{width:100%;min-height:200px;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit}
+input[type=text]{padding:11px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit;flex:1;min-width:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
+.hint{color:var(--mut);font-size:14px}
+.classrow{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:10px}
+.classrow button.go{flex:1;background:none;border:0;text-align:left;font:inherit;color:var(--tx);padding:0}
+.classrow .cn{font-weight:800;font-size:18px}
+.classrow .cs{color:var(--mut);font-size:13px;margin-top:2px}
+.ovl{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.confirmbox{background:var(--card);border-radius:20px;padding:22px 20px;width:300px;max-width:100%;text-align:center}
+.dial{width:172px;height:172px;border-radius:50%;margin:0 auto 14px;background:conic-gradient(#fff 0 90deg, var(--ac) 90deg 180deg, #fff 180deg 270deg, var(--ac) 270deg 360deg);border:4px solid var(--tx);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.2)}
+.dial .inner{width:126px;height:126px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px}
+.dial .who{font-size:20px;font-weight:800;overflow-wrap:anywhere;line-height:1.15;color:var(--tx)}
+.dial .tm2{font-variant-numeric:tabular-nums;font-size:14px;color:var(--mut);margin-top:4px}
+.confirmbox .q{font-size:17px;font-weight:700;margin:0 0 14px}
+.confirmrow{display:flex;gap:8px}
+.confirmrow .b{flex:1}
+.padgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.padgrid button{height:52px;border-radius:12px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit;font-size:20px;font-weight:700}
+.paddisp{font-size:34px;font-weight:800;text-align:center;padding:8px 0;min-height:44px;font-variant-numeric:tabular-nums}
+.cross{display:grid;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(3,64px);gap:8px;justify-content:center;margin:16px 0}
+.cross button{border:2px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:12px;font-size:26px;font-weight:800}
+.cross button:active{background:var(--ac);color:var(--acx)}
+.imp{border:1px dashed var(--bd);border-radius:12px;padding:12px}
+.verdict{font-size:22px;font-weight:800;text-align:center;margin:10px 0}
+.verdict.ok{color:var(--h2)}
+.verdict.bad{color:var(--st)}
+.etcard{display:flex;align-items:center;gap:10px}
+.etcard .nm{flex:1}
+.baliserow{display:flex;gap:10px;align-items:center;padding:6px 0;border-top:1px solid var(--bd);font-size:14px}
+.baliserow:first-child{border-top:0}
+.baliserow .ok{color:var(--h2);font-weight:700}
+.baliserow .bad{color:var(--st);font-weight:700}
+.folder{width:100%;text-align:left;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:8px;font:inherit;font-weight:700;color:var(--tx);display:flex;align-items:center;gap:10px}
+.folder .cnt{color:var(--mut);font-weight:600;font-size:13px}
+.folder .chev{margin-left:auto;color:var(--mut);font-weight:400}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+<h1>🧭 Chrono course d'orientation</h1>
+<div id="subnav"></div>
+</header>
+<main>
+<section id="home"></section>
+<section id="chrono" hidden></section>
+<section id="etoile" hidden></section>
+<section id="cor" hidden></section>
+<section id="res" hidden></section>
+<section id="els" hidden></section>
+</main>
+<div id="modal"></div>
+<script>
+const KEY='co-chrono-v2';
+let S={classes:[]};
+try{
+  const r2=localStorage.getItem(KEY);
+  if(r2){S=JSON.parse(r2)}
+  else{
+    const r1=localStorage.getItem('co-chrono-v1');
+    if(r1){const old=JSON.parse(r1);S={classes:[{id:'c'+Date.now().toString(36),name:'Classe 1',students:old.students||[],runs:old.runs||[]}]}}
+  }
+}catch(e){}
+S.classes=S.classes||[];
+S.classes.forEach(c=>{if(!c.etoile)c.etoile={answers:{},runs:[]}});
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+let xlsxPromise=null;
+function loadXLSX(){
+  if(window.XLSX)return Promise.resolve(window.XLSX);
+  if(xlsxPromise)return xlsxPromise;
+  xlsxPromise=new Promise((res,rej)=>{
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    s.onload=()=>res(window.XLSX);
+    s.onerror=()=>{xlsxPromise=null;rej(new Error('load failed'))};
+    document.head.append(s);
+  });
+  return xlsxPromise;
+}
+const $=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,'0');
+function fmt(ms){const t=Math.max(0,Math.floor(ms/100));return Math.floor(t/600)+':'+pad(Math.floor(t%600/10))+'.'+t%10}
+function h(tag,attrs,...kids){const e=document.createElement(tag);for(const k in attrs||{}){if(k==='on')e.onclick=attrs[k];else e.setAttribute(k,attrs[k])}kids.flat().forEach(c=>e.append(c));return e}
+const live=(C,id)=>C.runs.find(r=>r.sid===id&&r.end==null);
+const fin=(C,id)=>C.runs.filter(r=>r.sid===id&&r.end!=null);
+const etLive=(C,id)=>C.etoile.runs.find(r=>r.sid===id&&r.end==null);
+const et=(C,id)=>C.etoile.runs.filter(r=>r.sid===id&&r.end!=null);
+const dur=r=>r.end-r.start;
+let view='home',currentClassId=null,confirmStop=null,confirmTimer=null,flow=null,flowTimer=null,etExpanded=new Set(),openFolders=new Set();
+function curClass(){return S.classes.find(c=>c.id===currentClassId)}
+
+function arm(btn,label,fn){let a=false;btn.onclick=()=>{if(!a){a=true;btn.textContent='Sûr ?';setTimeout(()=>{a=false;btn.textContent=label},3000);return}fn()}}
+
+/* ---------- Accueil : choix de la classe ---------- */
+function renderHome(){
+  const el=$('#home');el.replaceChildren();
+  if(!S.classes.length){el.append(h('p',{class:'hint'},'Ajoute une première classe ci-dessous.'))}
+  S.classes.forEach(c=>{
+    const go=h('button',{class:'go',on:()=>{currentClassId=c.id;show('chrono')}},
+      h('div',{class:'cn'},c.name),h('div',{class:'cs'},c.students.length+' élève'+(c.students.length>1?'s':'')+' · '+c.runs.filter(r=>r.end!=null).length+' temps enregistré'+(c.runs.filter(r=>r.end!=null).length>1?'s':'')));
+    const del=h('button',{class:'x'},'✕');
+    arm(del,'✕',()=>{S.classes=S.classes.filter(x=>x!==c);save();renderHome()});
+    el.append(h('div',{class:'classrow'},go,del));
+  });
+  const inp=h('input',{type:'text',placeholder:'Nom de la nouvelle classe'});
+  const add=()=>{
+    const name=inp.value.trim();if(!name)return;
+    const c={id:'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name,students:[],runs:[],etoile:{answers:{},runs:[]}};
+    S.classes.push(c);save();inp.value='';renderHome();
+  };
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')add()});
+  el.append(h('div',{class:'row'},inp,h('button',{class:'b',on:add},'Ajouter')));
+}
+
+/* ---------- Sous-navigation dans une classe ---------- */
+function renderSubnav(){
+  const sn=$('#subnav');sn.replaceChildren();
+  if(view==='home'){sn.hidden=true;return}
+  sn.hidden=false;
+  const C=curClass();
+  sn.append(h('button',{class:'back',on:()=>{currentClassId=null;show('home')}},'← Classes · '+(C?C.name:'')));
+  const nv=h('nav',{});
+  [['chrono','Chrono'],['etoile','⭐ Étoile'],['cor','✅ Correction'],['res','🗺️ Résultats'],['els','🚩 Élèves']].forEach(([v,l])=>nv.append(h('button',{class:view===v?'on':'',on:()=>show(v)},l)));
+  sn.append(nv);
+}
+
+/* ---------- Confirmation d'arrêt ---------- */
+function askStop(s,r){confirmStop={s,r};renderModal()}
+function closeConfirm(){confirmStop=null;if(confirmTimer){clearInterval(confirmTimer);confirmTimer=null}renderModal()}
+function renderModal(){
+  const m=$('#modal');m.replaceChildren();
+  if(confirmTimer){clearInterval(confirmTimer);confirmTimer=null}
+  if(confirmStop){
+    const {s,r}=confirmStop;
+    const tmEl=h('div',{class:'tm2'},fmt(Date.now()-r.start));
+    const dial=h('div',{class:'dial'},h('div',{class:'inner'},h('div',{class:'who'},s.name),tmEl));
+    confirmTimer=setInterval(()=>{if(confirmStop)tmEl.textContent=fmt(Date.now()-confirmStop.r.start)},100);
+    const yes=h('button',{class:'b stop',on:()=>{r.end=Date.now();r.limit=curClass().limit||null;save();closeConfirm();renderChrono()}},'Oui, arrêter');
+    const no=h('button',{class:'b sec',on:closeConfirm},'Continuer');
+    m.append(h('div',{class:'ovl',on:e=>{if(e.target===e.currentTarget)closeConfirm()}},
+      h('div',{class:'confirmbox'},dial,h('p',{class:'q'},'Arrêter le chrono ?'),h('div',{class:'confirmrow'},no,yes))));
+    return;
+  }
+  if(flow){renderFlow(m);return}
+}
+
+/* ---------- Chrono ---------- */
+function renderChrono(){
+  const el=$('#chrono');el.replaceChildren();
+  const C=curClass();if(!C)return;
+  if(!C.students.length){el.append(h('p',{class:'hint'},'Ajoute d\u2019abord les prénoms dans l\u2019onglet « Élèves ».'));return}
+  const lim=h('input',{type:'text',inputmode:'text',placeholder:'ex. 15 ou 15:30'});
+  lim.value=C.limit?limitText(C.limit):'';
+  lim.onchange=()=>{C.limit=parseLimit(lim.value);save();renderChrono()};
+  el.append(h('div',{class:'row'},h('span',{class:'hint'},'⏱️ Temps limite (min) :'),lim));
+  const g=h('div',{class:'grid'});
+  C.students.forEach(s=>{
+    const r=live(C,s.id),d=fin(C,s.id),last=d[d.length-1];
+    const over=!!C.limit&&(r?Date.now()-r.start>C.limit:(last?dur(last)>C.limit:false));
+    const t=h('div',{class:'tm'+(r||last?'':' mut')},r?'0:00.0':last?fmt(dur(last)):'–');
+    if(r)t.dataset.start=r.start;
+    const btn=r?h('button',{class:'b stop',on:()=>askStop(s,r)},'Arrêter')
+               :h('button',{class:'b',on:()=>{C.runs.push({sid:s.id,start:Date.now(),end:null});save();renderChrono()}},last?'Nouveau départ':'Départ');
+    g.append(h('div',{class:'card'+(r?' run':'')+(over?' over':'')},h('div',{class:'nm'},s.name),t,h('div',{class:'hint'},d.length?d.length+(d.length>1?' essais':' essai'):'',(!r&&over)?' · +'+fmt(dur(last)-C.limit):''),btn));
+  });
+  el.append(g);
+}
+
+/* ---------- Course en étoile ---------- */
+function parseLimit(v){
+  v=String(v||'').trim().replace(',','.');if(!v)return null;
+  if(v.includes(':')){const [m,s]=v.split(':');const ms=(parseInt(m,10)||0)*60000+(parseInt(s,10)||0)*1000;return ms>0?ms:null}
+  const n=parseFloat(v);return n>0?Math.round(n*60000):null;
+}
+function limitText(ms){const t=Math.round(ms/1000);return Math.floor(t/60)+(t%60?':'+pad(t%60):'')}
+function normCode(v){return String(v==null?'':v).trim().toUpperCase()}
+async function importBalises(C,file){
+  const ext=(file.name.split('.').pop()||'').toLowerCase();
+  let rows;
+  if(ext==='csv'){
+    const text=await file.text();
+    rows=text.split(/\r?\n/).filter(l=>l.trim()).map(l=>l.split(/[;,]/).map(c=>c.trim()));
+  } else {
+    const XLSX=await loadXLSX();
+    const buf=await file.arrayBuffer();
+    const wb=XLSX.read(buf,{type:'array'});
+    const sheet=wb.Sheets[wb.SheetNames[0]];
+    rows=XLSX.utils.sheet_to_json(sheet,{header:1,raw:false,defval:''});
+  }
+  let start=0;
+  if(rows.length&&isNaN(parseInt(rows[0][0],10)))start=1;
+  const answers={};
+  for(let i=start;i<rows.length;i++){
+    const r=rows[i];if(!r||!r.length)continue;
+    const num=parseInt(r[0],10);if(isNaN(num))continue;
+    answers[num]={haut:normCode(r[1]),bas:normCode(r[2]),gauche:normCode(r[3]),droite:normCode(r[4])};
+  }
+  C.etoile.answers=answers;save();
+}
+function openFlow(s){flow={sid:s.id,step:'orientation',orientation:null,balise:'',resultat:'',correct:null,expected:null,err:''};renderModal()}
+function closeFlow(){flow=null;renderModal()}
+function renderFlow(m){
+  const C=curClass();
+  const box=h('div',{class:'confirmbox'});
+  if(flow.step==='orientation'){
+    box.append(h('p',{class:'q'},'Quelle direction avais-tu ?'),
+      h('div',{class:'cross'},
+        h('span',{}),h('button',{on:()=>{flow.orientation='haut';flow.step='balise';renderModal()}},'↑'),h('span',{}),
+        h('button',{on:()=>{flow.orientation='gauche';flow.step='balise';renderModal()}},'←'),h('span',{}),h('button',{on:()=>{flow.orientation='droite';flow.step='balise';renderModal()}},'→'),
+        h('span',{}),h('button',{on:()=>{flow.orientation='bas';flow.step='balise';renderModal()}},'↓'),h('span',{})),
+      h('div',{class:'confirmrow'},h('button',{class:'b sec',on:closeFlow},'Annuler')));
+  } else if(flow.step==='balise'||flow.step==='resultat'){
+    const field=flow.step==='balise'?'balise':'resultat';
+    box.append(h('p',{class:'q'},flow.step==='balise'?'Numéro de balise recherché :':'Résultat trouvé :'));
+    if(flow.err)box.append(h('p',{class:'hint'},flow.err));
+    box.append(h('div',{class:'paddisp'},flow[field]||'–'));
+    const grid=h('div',{class:'padgrid'});
+    ['1','2','3','4','5','6','7','8','9'].forEach(d=>grid.append(h('button',{on:()=>{flow[field]=(flow[field]+d).slice(0,4);renderModal()}},d)));
+    grid.append(h('button',{on:()=>{flow[field]='';renderModal()}},'C'));
+    grid.append(h('button',{on:()=>{flow[field]=(flow[field]+'0').slice(0,4);renderModal()}},'0'));
+    grid.append(h('button',{on:()=>{flow[field]=flow[field].slice(0,-1);renderModal()}},'⌫'));
+    box.append(grid);
+    const validate=()=>{
+      if(!flow[field])return;
+      if(field==='balise'){
+        const already=C.etoile.runs.some(r=>r.sid===flow.sid&&r.correct&&String(r.balise)===String(flow.balise));
+        if(already){flow.err='Tu as déjà trouvé cette balise, choisis-en une autre.';renderModal();return}
+        flow.err='';flow.step='resultat';renderModal();return;
+      }
+      const ans=C.etoile.answers[parseInt(flow.balise,10)];
+      if(!ans){flow.err='Balise inconnue, vérifie le numéro.';flow.step='balise';renderModal();return}
+      const expected=ans[flow.orientation];
+      const correct=normCode(flow.resultat)===expected;
+      const r=etLive(C,flow.sid);
+      if(r){r.end=Date.now();r.balise=flow.balise;r.orientation=flow.orientation;r.entered=flow.resultat;r.correct=correct;save()}
+      flow.correct=correct;flow.expected=expected;flow.step='verdict';renderModal();
+    };
+    box.append(h('div',{class:'confirmrow'},h('button',{class:'b sec',on:closeFlow},'Annuler'),h('button',{class:'b',on:validate},'Valider')));
+  } else if(flow.step==='verdict'){
+    box.append(h('div',{class:'verdict '+(flow.correct?'ok':'bad')},flow.correct?'✅ Juste !':'❌ Faux'));
+    box.append(h('div',{class:'confirmrow'},h('button',{class:'b',on:()=>{
+      C.etoile.runs.push({sid:flow.sid,start:Date.now(),end:null,balise:null,orientation:null,entered:null,correct:null});
+      save();closeFlow();renderEtoile();
+    }},'Continuer')));
+  }
+  m.append(h('div',{class:'ovl',on:e=>{if(e.target===e.currentTarget)closeFlow()}},box));
+}
+function renderEtoile(){
+  const el=$('#etoile');el.replaceChildren();
+  const C=curClass();if(!C)return;
+  const nb=Object.keys(C.etoile.answers).length;
+  const msg=h('p',{class:'hint'},'');
+  const file=h('input',{type:'file',accept:'.xlsx,.xls,.csv'});
+  file.onchange=async()=>{
+    if(!file.files[0])return;
+    msg.textContent='Import en cours…';
+    try{await importBalises(C,file.files[0]);msg.textContent=Object.keys(C.etoile.answers).length+' balises importées.';renderEtoile()}
+    catch(e){msg.textContent='Import impossible (fichier .xlsx : connexion internet nécessaire la première fois ; sinon exporte en .csv).'}
+  };
+  el.append(h('div',{class:'card imp'},h('h2',{},'📋 Réponses des balises'),
+    h('p',{class:'hint'},nb?nb+' balise'+(nb>1?'s':'')+' chargée'+(nb>1?'s':'')+'.':'Aucune balise chargée pour le moment.'),
+    h('p',{class:'hint'},'Fichier avec une ligne par balise : numéro, réponse haut, bas, gauche, droite (dans cet ordre). Formats acceptés : .xlsx ou .csv.'),
+    h('div',{class:'row'},file),msg));
+
+  if(!C.students.length){el.append(h('p',{class:'hint'},'Ajoute d\u2019abord les prénoms dans l\u2019onglet « Élèves ».'));return}
+  const g=h('div',{class:'grid'});
+  C.students.forEach(s=>{
+    const r=etLive(C,s.id),d=et(C,s.id);
+    const okN=d.filter(x=>x.correct).length,koN=d.filter(x=>!x.correct).length;
+    const t=h('div',{class:'tm'+(r?'':' mut')},r?'0:00.0':'–');
+    if(r)t.dataset.start=r.start;
+    const card=h('div',{class:'card'+(r?' run':'')},h('div',{class:'nm'},s.name),t,h('div',{class:'hint'},d.length?('✓'+okN+' · ✗'+koN):''));
+    if(r){
+      card.append(h('button',{class:'b',on:()=>openFlow(s)},'Entrer un résultat'));
+      const stop=h('button',{class:'b sec'},'🏁 Terminer la course');
+      arm(stop,'🏁 Terminer la course',()=>{C.etoile.runs=C.etoile.runs.filter(x=>x!==r);save();renderEtoile()});
+      card.append(stop);
+    } else {
+      card.append(h('button',{class:'b',on:()=>{C.etoile.runs.push({sid:s.id,start:Date.now(),end:null,balise:null,orientation:null,entered:null,correct:null});save();renderEtoile()}},d.length?'Nouveau départ':'Départ'));
+    }
+    g.append(card);
+  });
+  el.append(g);
+}
+let sortBy='eleve';
+function dateKeyOf(ts){return new Date(ts).toISOString().slice(0,10)}
+function dateLabelOf(key){return new Date(key+'T00:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+function folderBtn(key,label,count){
+  const open=openFolders.has(key);
+  const b=h('button',{class:'folder',on:()=>{if(open)openFolders.delete(key);else openFolders.add(key);renderRes()}},
+    h('span',{},'📁'),h('span',{},label),h('span',{class:'cnt'},count),h('span',{class:'chev'},open?'▾':'▸'));
+  return b;
+}
+function renderRes(){
+  const el=$('#res');el.replaceChildren();
+  const C=curClass();if(!C)return;
+
+  /* ---- Chrono (course d'orientation), par dossier de date ---- */
+  el.append(h('h2',{},'🧭 Chrono'));
+  const allRuns=C.runs.filter(r=>r.end!=null);
+  if(!allRuns.length){el.append(h('p',{class:'hint'},'Aucun temps de chrono enregistré pour le moment.'))}
+  else{
+    const byDateC={};
+    allRuns.forEach(r=>{(byDateC[dateKeyOf(r.start)]=byDateC[dateKeyOf(r.start)]||[]).push(r)});
+    const dateKeysC=Object.keys(byDateC).sort((a,b)=>b.localeCompare(a));
+    const seg=h('div',{class:'row'});
+    [['eleve','Par élève'],['temps','Par temps'],['date','Chronologique']].forEach(([k,l])=>seg.append(h('button',{class:'b'+(sortBy===k?'':' sec'),on:()=>{sortBy=k;renderRes()}},l)));
+    el.append(seg);
+    dateKeysC.forEach(key=>{
+      const dayRuns=byDateC[key];
+      const all=dayRuns.map(r=>({r,s:C.students.find(x=>x.id===r.sid)})).filter(x=>x.s).sort((a,b)=>a.r.start-b.r.start);
+      const fkey='c-'+key;
+      el.append(folderBtn(fkey,dateLabelOf(key),all.length+' tentative'+(all.length>1?'s':'')));
+      if(!openFolders.has(fkey))return;
+      const cnt={};all.forEach(x=>{cnt[x.s.id]=(cnt[x.s.id]||0)+1;x.n=cnt[x.s.id]});
+      const rows=[...all];
+      if(sortBy==='eleve')rows.sort((a,b)=>a.s.name.localeCompare(b.s.name,'fr')||a.r.start-b.r.start);
+      else if(sortBy==='temps')rows.sort((a,b)=>dur(a.r)-dur(b.r));
+      const tb=h('tbody');
+      rows.forEach(x=>{
+        const d=new Date(x.r.start);
+        const del=h('button',{class:'x'},'✕');
+        arm(del,'✕',()=>{C.runs=C.runs.filter(y=>y!==x.r);save();renderRes()});
+        tb.append(h('tr',{},h('td',{},x.s.name),h('td',{},'n°'+x.n),h('td',{},pad(d.getHours())+':'+pad(d.getMinutes())),h('td',{},h('b',{},fmt(dur(x.r)))),h('td',{class:'ov'},(x.r.limit&&dur(x.r)>x.r.limit)?'+'+fmt(dur(x.r)-x.r.limit):''),h('td',{},x.r.corr?'✓'+x.r.corr.ok+' · ✗'+x.r.corr.ko:''),h('td',{},del)));
+      });
+      el.append(h('div',{class:'card'},h('div',{class:'scroll'},h('table',{},h('thead',{},h('tr',{},h('th',{},'Élève'),h('th',{},'Essai'),h('th',{},'Heure'),h('th',{},'Temps'),h('th',{},'Dépassement'),h('th',{},'Balises'),h('th',{},''))),tb))));
+    });
+    const msg=h('p',{class:'hint'},'');
+    const ex=h('button',{class:'b',on:async()=>{
+      const lines=['Classe;Prénom;Essai;Date;Heure de départ;Temps (s);Temps;Temps limite;Dépassement;Balises justes;Balises fausses'];
+      const allA=allRuns.map(r=>({r,s:C.students.find(x=>x.id===r.sid)})).filter(x=>x.s);
+      const cnt={};allA.forEach(x=>{cnt[x.s.id]=(cnt[x.s.id]||0)+1;x.n=cnt[x.s.id]});
+      allA.forEach(x=>{const d=new Date(x.r.start);
+        lines.push([C.name,x.s.name,x.n,d.toLocaleDateString('fr-FR'),pad(d.getHours())+':'+pad(d.getMinutes()),(dur(x.r)/1000).toFixed(1).replace('.',','),fmt(dur(x.r)),x.r.limit?fmt(x.r.limit):'',(x.r.limit&&dur(x.r)>x.r.limit)?fmt(dur(x.r)-x.r.limit):'',x.r.corr?x.r.corr.ok:'',x.r.corr?x.r.corr.ko:''].join(';'))});
+      try{const dl=await claude.use('downloads');if(!dl)throw 0;await dl.save({filename:'temps-course-orientation-'+C.name.replace(/[^a-z0-9]+/gi,'-')+'.csv',data:'\ufeff'+lines.join('\n')});msg.textContent='Fichier enregistré.'}
+      catch(e){if(e&&e.code==='declined')return;try{await navigator.clipboard.writeText(lines.join('\n'));msg.textContent='Copié dans le presse-papiers (à coller dans un tableur).'}catch(_){msg.textContent='Export indisponible sur cet appareil.'}}
+    }},'Exporter en CSV');
+    el.append(h('div',{class:'row'},ex),msg);
+  }
+
+  /* ---- Course en étoile, par dossier de date ---- */
+  el.append(h('h2',{},'⭐ Étoile'));
+  const finished=C.etoile.runs.filter(r=>r.end!=null);
+  if(!finished.length){el.append(h('p',{class:'hint'},'Aucun résultat de course en étoile pour le moment.'));return}
+  const byDate={};
+  finished.forEach(r=>{(byDate[dateKeyOf(r.start)]=byDate[dateKeyOf(r.start)]||[]).push(r)});
+  const dateKeys=Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
+  const ORLBL={haut:'Haut',bas:'Bas',gauche:'Gauche',droite:'Droite'};
+  dateKeys.forEach(key=>{
+    const runs=byDate[key];
+    const bySid={};
+    runs.forEach(r=>{
+      const st=bySid[r.sid]=bySid[r.sid]||{sid:r.sid,ok:0,ko:0,totalMs:0,runs:[]};
+      if(r.correct)st.ok++;else st.ko++;
+      st.totalMs+=dur(r);st.runs.push(r);
+    });
+    const rows=Object.values(bySid).map(st=>({...st,s:C.students.find(x=>x.id===st.sid)})).filter(x=>x.s);
+    rows.sort((a,b)=>b.ok-a.ok||a.totalMs-b.totalMs);
+    const fkey='e-'+key;
+    el.append(folderBtn(fkey,dateLabelOf(key),rows.length+' élève'+(rows.length>1?'s':'')));
+    if(!openFolders.has(fkey))return;
+    const tb2=h('tbody');
+    rows.forEach((x,i)=>{
+      const ek=x.sid+'|'+key;
+      const openB=h('button',{class:'x'},etExpanded.has(ek)?'▴ Détail':'▾ Détail');
+      openB.onclick=()=>{if(etExpanded.has(ek))etExpanded.delete(ek);else etExpanded.add(ek);renderRes()};
+      const del=h('button',{class:'x'},'✕');
+      arm(del,'✕',()=>{C.etoile.runs=C.etoile.runs.filter(r=>!(r.sid===x.sid&&dateKeyOf(r.start)===key));save();renderRes()});
+      tb2.append(h('tr',{},h('td',{},String(i+1)),h('td',{},x.s.name),h('td',{},String(x.ok)),h('td',{},String(x.ko)),h('td',{},fmt(x.totalMs)),h('td',{},openB),h('td',{},del)));
+      if(etExpanded.has(ek)){
+        const detail=h('td',{colspan:'7'});
+        const list=x.runs.slice().sort((a,b)=>a.start-b.start);
+        list.forEach(r=>{
+          detail.append(h('div',{class:'baliserow'},
+            h('span',{},'Balise '+(r.balise!=null?r.balise:'?')),
+            h('span',{},ORLBL[r.orientation]||r.orientation||''),
+            h('span',{},r.entered||''),
+            h('span',{class:r.correct?'ok':'bad'},r.correct?'✓ juste':'✗ faux')));
+        });
+        tb2.append(h('tr',{},detail));
+      }
+    });
+    el.append(h('div',{class:'card'},h('div',{class:'scroll'},h('table',{},h('thead',{},h('tr',{},h('th',{},'#'),h('th',{},'Élève'),h('th',{},'Justes'),h('th',{},'Fausses'),h('th',{},'Temps total'),h('th',{},''),h('th',{},''))),tb2))));
+  });
+}
+
+/* ---------- Correction des cartons ---------- */
+let cor=null,tessPromise=null,ocrWorker=null;
+const CDN='https://cdn.jsdelivr.net/npm/';
+const ORD=['haut','droite','bas','gauche'],ARW={haut:'↑',bas:'↓',gauche:'←',droite:'→'};
+function loadTess(){
+  if(window.Tesseract)return Promise.resolve(window.Tesseract);
+  if(tessPromise)return tessPromise;
+  tessPromise=new Promise((res,rej)=>{
+    const sc=document.createElement('script');
+    sc.src=CDN+'tesseract.js@5.1.1/dist/tesseract.min.js';
+    sc.onload=()=>res(window.Tesseract);
+    sc.onerror=()=>{tessPromise=null;rej(new Error('load failed'))};
+    document.head.append(sc);
+  });
+  return tessPromise;
+}
+async function getWorker(){
+  if(ocrWorker)return ocrWorker;
+  const T=await loadTess();
+  const w=await T.createWorker('eng',1,{
+    workerPath:CDN+'tesseract.js@5.1.1/dist/worker.min.js',
+    corePath:CDN+'tesseract.js-core@5.1.0',
+    langPath:CDN+'@tesseract.js-data/eng@1.0.0/4.0.0_best_int'
+  });
+  await w.setParameters({tessedit_char_whitelist:'0123456789',tessedit_pageseg_mode:'11'});
+  ocrWorker=w;return w;
+}
+async function prepImage(file){
+  const url=URL.createObjectURL(file);
+  const img=await new Promise((ok,ko)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=ko;i.src=url});
+  const sc=Math.min(1,2000/Math.max(img.naturalWidth,img.naturalHeight));
+  const cv=document.createElement('canvas');cv.width=Math.round(img.naturalWidth*sc);cv.height=Math.round(img.naturalHeight*sc);
+  const cx=cv.getContext('2d');cx.drawImage(img,0,0,cv.width,cv.height);
+  const id=cx.getImageData(0,0,cv.width,cv.height),p=id.data,hist=new Array(256).fill(0);
+  for(let i=0;i<p.length;i+=4){const g=Math.round(.299*p[i]+.587*p[i+1]+.114*p[i+2]);p[i]=p[i+1]=p[i+2]=g;hist[g]++}
+  const n=p.length/4;let a=0,lo=0,hi=255;
+  for(let g=0;g<256;g++){a+=hist[g];if(a>=n*.02){lo=g;break}}
+  a=0;for(let g=255;g>=0;g--){a+=hist[g];if(a>=n*.02){hi=g;break}}
+  const k=hi>lo?255/(hi-lo):1;
+  for(let i=0;i<p.length;i+=4){const g=Math.max(0,Math.min(255,(p[i]-lo)*k));p[i]=p[i+1]=p[i+2]=g}
+  cx.putImageData(id,0,0);
+  return {url,cv};
+}
+function wordsOf(d){return d.words||(d.blocks||[]).flatMap(b=>b.paragraphs.flatMap(p=>p.lines.flatMap(l=>l.words)))}
+/* Hypothèse : une ligne de numéros de balises, puis juste en dessous la ligne des réponses (et ainsi de suite). */
+function parseCard(words,orient){
+  const tk=words.map(w=>({t:String(w.text).replace(/\D/g,''),x:(w.bbox.x0+w.bbox.x1)/2,y:(w.bbox.y0+w.bbox.y1)/2,hh:w.bbox.y1-w.bbox.y0,w:w.bbox.x1-w.bbox.x0})).filter(t=>t.t);
+  if(!tk.length)return [];
+  tk.sort((a,b)=>a.y-b.y);
+  const hs=tk.map(t=>t.hh).sort((a,b)=>a-b),mh=hs[Math.floor(hs.length/2)]||20;
+  const lines=[];
+  tk.forEach(t=>{const L=lines[lines.length-1];
+    if(L&&Math.abs(t.y-L.y)<mh*.7){L.items.push(t);L.y=L.items.reduce((q,i)=>q+i.y,0)/L.items.length}
+    else lines.push({y:t.y,items:[t]})});
+  lines.forEach(L=>L.items.sort((a,b)=>a.x-b.x));
+  const rows=[];
+  for(let i=0;i<lines.length;i+=2){
+    const top=lines[i].items,bot=lines[i+1]?lines[i+1].items:[],used=new Set();
+    top.forEach(b=>{
+      let best=-1,bd=1e9;
+      bot.forEach((a,j)=>{if(used.has(j))return;const d=Math.abs(a.x-b.x);if(d<bd){bd=d;best=j}});
+      const okp=best>=0&&bd<=Math.max(b.w,mh*2);
+      if(okp)used.add(best);
+      rows.push({b:b.t,v:okp?bot[best].t:'',o:orient});
+    });
+  }
+  return rows;
+}
+function evalRow(C,r){
+  if(!r.b)return null;
+  const ans=C.etoile.answers[parseInt(r.b,10)];
+  if(!ans)return '?';
+  return r.v!==''&&normCode(r.v)===ans[r.o]?'ok':'ko';
+}
+const emptyRows=(n,o)=>Array.from({length:n},()=>({b:'',v:'',o}));
+function openCor(run){cor={run,step:'photo',rows:[],orient:'haut',img:null,note:''};renderCor()}
+function renderCor(){
+  const el=$('#cor');el.replaceChildren();
+  const C=curClass();if(!C)return;
+  if(cor&&!C.runs.includes(cor.run))cor=null;
+  if(cor){renderCorScan(el,C);return}
+  const nb=Object.keys(C.etoile.answers).length;
+  const msg=h('p',{class:'hint'},'');
+  const file=h('input',{type:'file',accept:'.xlsx,.xls,.csv'});
+  file.onchange=async()=>{
+    if(!file.files[0])return;
+    msg.textContent='Import en cours…';
+    try{await importBalises(C,file.files[0]);renderCor()}
+    catch(e){msg.textContent='Import impossible (fichier .xlsx : connexion internet nécessaire la première fois ; sinon exporte en .csv).'}
+  };
+  el.append(h('div',{class:'card imp'},h('h2',{},'📋 Correction du circuit'),
+    h('p',{class:'hint'},nb?nb+' balise'+(nb>1?'s':'')+' chargée'+(nb>1?'s':'')+' (même fichier que pour l’onglet Étoile).':'Aucune correction chargée.'),
+    h('p',{class:'hint'},'Une ligne par balise : numéro, réponse haut, bas, gauche, droite. Formats : .xlsx ou .csv.'),
+    h('div',{class:'row'},file),msg));
+  const runs=C.runs.filter(r=>r.end!=null&&C.students.some(s=>s.id===r.sid)).sort((a,b)=>b.start-a.start);
+  el.append(h('h2',{},'Cartons à corriger'));
+  if(!runs.length){el.append(h('p',{class:'hint'},'Aucun temps de chrono enregistré pour le moment.'));return}
+  runs.forEach(r=>{
+    const s=C.students.find(x=>x.id===r.sid),d=new Date(r.start);
+    el.append(h('div',{class:'card',style:'margin-bottom:8px'},
+      h('div',{class:'etcard'},h('div',{class:'nm'},s.name),h('button',{class:'b'+(r.corr?' sec':''),on:()=>openCor(r)},r.corr?'Refaire':'📷 Scanner')),
+      h('div',{class:'hint'},d.toLocaleDateString('fr-FR')+' · '+pad(d.getHours())+':'+pad(d.getMinutes())+' · '+fmt(dur(r))+(r.corr?' · ✓'+r.corr.ok+' ✗'+r.corr.ko:' · à corriger'))));
+  });
+}
+function renderCorScan(el,C){
+  const run=cor.run,s=C.students.find(x=>x.id===run.sid);
+  el.append(h('button',{class:'x',on:()=>{cor=null;renderCor()}},'← Retour à la liste'),h('h2',{},'📝 '+(s?s.name:'')+' · '+fmt(dur(run))));
+  if(!Object.keys(C.etoile.answers).length)el.append(h('p',{class:'hint'},'⚠️ Aucune correction chargée : retourne à la liste pour importer le fichier.'));
+  if(cor.step==='photo'){
+    const st=h('p',{class:'hint'},'');
+    const inp=h('input',{type:'file',accept:'image/*',capture:'environment'});
+    inp.onchange=async()=>{
+      const f=inp.files[0];if(!f)return;
+      const mine=cor;
+      try{
+        st.textContent='Préparation de l’image…';
+        const {url,cv}=await prepImage(f);mine.img=url;
+        st.textContent='Lecture en cours… (internet nécessaire la première fois, patiente un peu)';
+        const w=await getWorker();
+        const r=await w.recognize(cv);
+        mine.rows=parseCard(wordsOf(r.data),mine.orient);
+        if(!mine.rows.length){mine.rows=emptyRows(6,mine.orient);mine.note='Aucun nombre reconnu : saisis-les à la main.'}
+      }catch(e){
+        mine.rows=emptyRows(6,mine.orient);
+        mine.note='Lecture automatique indisponible : saisis les nombres à la main.';
+        if(!mine.img){try{mine.img=URL.createObjectURL(f)}catch(_){}}
+      }
+      if(cor!==mine)return;
+      mine.step='review';renderCor();
+    };
+    el.append(h('p',{class:'hint'},'Photographie le carton à plat, de face, avec une bonne lumière.'),h('div',{class:'row'},inp),st,
+      h('div',{class:'row'},h('button',{class:'b sec',on:()=>{cor.rows=emptyRows(6,cor.orient);cor.step='review';renderCor()}},'Saisir à la main')));
+    return;
+  }
+  if(cor.note)el.append(h('p',{class:'hint'},cor.note));
+  if(cor.img)el.append(h('img',{src:cor.img,style:'max-width:100%;max-height:200px;border-radius:10px;display:block;margin:6px 0'}));
+  const or=h('div',{class:'row'},h('span',{class:'hint'},'Direction du carton :'));
+  ORD.forEach(o=>or.append(h('button',{class:'b'+(cor.orient===o?'':' sec'),style:'padding:8px 14px',on:()=>{cor.orient=o;cor.rows.forEach(r=>r.o=o);renderCor()}},ARW[o])));
+  el.append(or,h('p',{class:'hint'},'Corrige les nombres mal lus. La flèche d’une ligne change sa direction.'));
+  el.append(h('div',{class:'corrow hint'},h('span',{},'Balise'),h('span',{},'Dir.'),h('span',{},'Lu'),h('span',{}),h('span',{})));
+  const badges=[],tot=h('div',{class:'verdict'},'');
+  const upd=()=>{
+    let ok=0,ko=0,un=0;
+    cor.rows.forEach((r,i)=>{const e=evalRow(C,r);badges[i].textContent=e==='ok'?'✅':e==='ko'?'❌':e==='?'?'❓':'';if(e==='ok')ok++;else if(e==='ko')ko++;else if(e==='?')un++});
+    tot.textContent='✓ '+ok+' juste'+(ok>1?'s':'')+' · ✗ '+ko+' fausse'+(ko>1?'s':'')+(un?' · ❓ '+un+' inconnue'+(un>1?'s':''):'');
+    tot.className='verdict '+(ko?'bad':'ok');
+  };
+  cor.rows.forEach((r,i)=>{
+    const b=h('input',{type:'text',inputmode:'numeric'});b.value=r.b;b.oninput=()=>{r.b=b.value.replace(/\D/g,'');upd()};
+    const o=h('button',{class:'x',style:'font-size:22px;text-align:center'},ARW[r.o]);
+    o.onclick=()=>{r.o=ORD[(ORD.indexOf(r.o)+1)%4];o.textContent=ARW[r.o];upd()};
+    const v=h('input',{type:'text',inputmode:'numeric'});v.value=r.v;v.oninput=()=>{r.v=v.value.replace(/\D/g,'');upd()};
+    const bd=h('span',{});badges.push(bd);
+    el.append(h('div',{class:'corrow'},b,o,v,bd,h('button',{class:'x',on:()=>{cor.rows.splice(i,1);renderCor()}},'✕')));
+  });
+  el.append(tot,h('div',{class:'row'},
+    h('button',{class:'b sec',on:()=>{cor.rows.push({b:'',v:'',o:cor.orient});renderCor()}},'+ Ligne'),
+    h('button',{class:'b',on:()=>{
+      let ok=0,ko=0;const rows=[];
+      cor.rows.forEach(r=>{const e=evalRow(C,r);if(!e)return;if(e==='ok')ok++;else if(e==='ko')ko++;rows.push({b:r.b,o:r.o,v:r.v,ok:e==='ok'})});
+      cor.run.corr={ok,ko,rows,at:Date.now()};save();cor=null;renderCor();
+    }},'Enregistrer la correction')));
+  upd();
+}
+
+/* ---------- Élèves ---------- */
+function renderEls(){
+  const el=$('#els');el.replaceChildren();
+  const C=curClass();if(!C)return;
+  const ta=h('textarea',{placeholder:'Un prénom par ligne'});ta.value=C.students.map(s=>s.name).join('\n');
+  const msg=h('p',{class:'hint'},'');
+  const saveList=()=>{
+    const names=[...new Set(ta.value.split('\n').map(x=>x.trim()).filter(Boolean))];
+    const old=C.students;
+    C.students=names.map(n=>old.find(o=>o.name===n)||{id:'s'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:n});
+    const ids=new Set(C.students.map(s=>s.id));C.runs=C.runs.filter(r=>ids.has(r.sid));C.etoile.runs=C.etoile.runs.filter(r=>ids.has(r.sid));
+    save();msg.textContent=names.length+' élèves enregistrés.';
+  };
+  const ok=h('button',{class:'b',on:saveList},'Enregistrer la liste');
+  const srt=h('button',{class:'b sec',on:()=>{
+    ta.value=ta.value.split('\n').map(x=>x.trim()).filter(Boolean).sort((a,b)=>a.localeCompare(b,'fr',{sensitivity:'base'})).join('\n');
+    saveList();msg.textContent='Liste triée par ordre alphabétique et enregistrée.';
+  }},'Trier A → Z');
+  const clr=h('button',{class:'b sec'},'Effacer tous les temps');
+  arm(clr,'Effacer tous les temps',()=>{C.runs=[];C.etoile.runs=[];save();msg.textContent='Temps effacés.'});
+  el.append(h('p',{class:'hint'},'Un prénom par ligne. Les temps déjà enregistrés sont conservés pour les prénoms qui restent.'),ta,h('div',{class:'row'},ok,srt,clr),msg,
+    h('p',{class:'hint'},'Les données sont stockées sur cet appareil, séparément pour chaque classe : utilise toujours le même téléphone ou la même tablette, et exporte en CSV pour garder une copie.'));
+}
+
+/* ---------- Navigation ---------- */
+function show(v){
+  view=v;
+  renderSubnav();
+  ['home','chrono','etoile','cor','res','els'].forEach(i=>$('#'+i).hidden=i!==v);
+  ({home:renderHome,chrono:renderChrono,etoile:renderEtoile,cor:renderCor,res:renderRes,els:renderEls})[v]();
+}
+show('home');
+setInterval(()=>{if(view==='chrono'||view==='etoile'){const C=curClass();document.querySelectorAll('[data-start]').forEach(e=>{const ms=Date.now()-e.dataset.start;e.textContent=fmt(ms);if(view==='chrono'&&C&&C.limit){const cd=e.closest('.card');if(cd)cd.classList.toggle('over',ms>C.limit)}})}},100);
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+</script>
+</body>
+</html>
