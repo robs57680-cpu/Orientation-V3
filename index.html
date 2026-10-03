@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chrono course d'orientation</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f2f4ea;--card:#fff;--tx:#20301c;--mut:#67765e;--ac:#e8720c;--acx:#fff;--st:#c0392b;--bd:#dde3d2;--h1:#1b3e1f;--h2:#2f6b3a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10160d;--card:#1b2418;--tx:#e7ecdf;--mut:#94a389;--ac:#f2860f;--acx:#1b1200;--st:#e5675a;--bd:#2b3626;--h1:#0d1f0f;--h2:#173e1c}}
+:root[data-theme="dark"]{--bg:#10160d;--card:#1b2418;--tx:#e7ecdf;--mut:#94a389;--ac:#f2860f;--acx:#1b1200;--st:#e5675a;--bd:#2b3626;--h1:#0d1f0f;--h2:#173e1c}
+*{box-sizing:border-box}
+body{margin:0;color:var(--tx);font:16px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  background:
+    radial-gradient(circle at 10% 90%, color-mix(in srgb, var(--ac) 12%, transparent) 0, transparent 30%),
+    repeating-radial-gradient(circle at 85% 12%, color-mix(in srgb, var(--h2) 14%, transparent) 0 3px, transparent 3px 16px),
+    var(--bg)}
+header{position:relative;overflow:hidden;padding:16px 16px 14px;border-radius:0 0 24px 24px;background:linear-gradient(135deg,var(--h2),var(--h1));box-shadow:0 4px 14px rgba(13,40,15,.3)}
+header::after{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.06) 0 9px, transparent 9px 20px);pointer-events:none}
+header::before{content:"🧭";position:absolute;right:-6px;top:-14px;font-size:70px;opacity:.16;transform:rotate(8deg)}
+h1{font-size:20px;margin:0 0 6px;color:#fff;position:relative;text-shadow:0 1px 3px rgba(0,0,0,.25)}
+.back{background:none;border:0;color:#fff;font:inherit;font-weight:700;padding:0 0 10px;opacity:.9;position:relative}
+nav{display:flex;gap:6px;position:relative;overflow-x:auto}
+nav button{flex:1 0 auto;white-space:nowrap;padding:10px 10px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.14);color:#fff;border-radius:10px;font:inherit;font-weight:600}
+nav button.on{background:#fff;color:var(--h1);border-color:#fff}
+main{padding:14px 16px 40px;max-width:720px;margin:0 auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:6px}
+.card.run{border-color:var(--ac);border-width:2px;box-shadow:0 0 0 3px color-mix(in srgb, var(--ac) 18%, transparent)}
+.card.over{border-color:var(--st);border-width:2px;background:color-mix(in srgb, var(--st) 16%, var(--card));box-shadow:0 0 0 3px color-mix(in srgb, var(--st) 20%, transparent)}
+.card.over .tm{color:var(--st)}
+.ov{color:var(--st);font-weight:700}
+.corrow{display:grid;grid-template-columns:1fr 46px 1fr 30px 26px;gap:6px;align-items:center;margin-bottom:6px}
+.nm{font-weight:700;font-size:17px;overflow-wrap:anywhere}
+.tm{font-variant-numeric:tabular-nums;font-size:24px;font-weight:700;min-height:30px}
+.tm.mut{color:var(--mut)}
+button.b{padding:12px;border:0;border-radius:10px;font:inherit;font-weight:700;background:var(--ac);color:var(--acx)}
+button.b.stop{background:var(--st);color:#fff}
+button.b.sec{background:transparent;color:var(--mut);border:1px solid var(--bd);font-weight:600}
+.x{background:none;border:0;color:var(--mut);font-size:13px;padding:2px;text-align:left}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:12px;overflow:hidden}
+th,td{padding:10px;text-align:left;border-bottom:1px solid var(--bd);font-variant-numeric:tabular-nums}
+th{font-size:13px;color:var(--mut)}
+.scroll{overflow-x:auto}
+textarea{width:100%;min-height:200px;padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit}
+input[type=text]{padding:11px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit;flex:1;min-width:0}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0;align-items:center}
+.hint{color:var(--mut);font-size:14px}
+.classrow{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:10px}
+.classrow button.go{flex:1;background:none;border:0;text-align:left;font:inherit;color:var(--tx);padding:0}
+.classrow .cn{font-weight:800;font-size:18px}
+.classrow .cs{color:var(--mut);font-size:13px;margin-top:2px}
+.ovl{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+.confirmbox{background:var(--card);border-radius:20px;padding:22px 20px;width:300px;max-width:100%;text-align:center}
+.dial{width:172px;height:172px;border-radius:50%;margin:0 auto 14px;background:conic-gradient(#fff 0 90deg, var(--ac) 90deg 180deg, #fff 180deg 270deg, var(--ac) 270deg 360deg);border:4px solid var(--tx);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(0,0,0,.2)}
+.dial .inner{width:126px;height:126px;border-radius:50%;background:var(--card);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px}
+.dial .who{font-size:20px;font-weight:800;overflow-wrap:anywhere;line-height:1.15;color:var(--tx)}
+.dial .tm2{font-variant-numeric:tabular-nums;font-size:14px;color:var(--mut);margin-top:4px}
+.confirmbox .q{font-size:17px;font-weight:700;margin:0 0 14px}
+.confirmrow{display:flex;gap:8px}
+.confirmrow .b{flex:1}
+.padgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0}
+.padgrid button{height:52px;border-radius:12px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font:inherit;font-size:20px;font-weight:700}
+.paddisp{font-size:34px;font-weight:800;text-align:center;padding:8px 0;min-height:44px;font-variant-numeric:tabular-nums}
+.cross{display:grid;grid-template-columns:repeat(3,64px);grid-template-rows:repeat(3,64px);gap:8px;justify-content:center;margin:16px 0}
+.cross button{border:2px solid var(--bd);background:var(--bg);color:var(--tx);border-radius:12px;font-size:26px;font-weight:800}
+.cross button:active{background:var(--ac);color:var(--acx)}
+.imp{border:1px dashed var(--bd);border-radius:12px;padding:12px}
+.verdict{font-size:22px;font-weight:800;text-align:center;margin:10px 0}
+.verdict.ok{color:var(--h2)}
+.verdict.bad{color:var(--st)}
+.etcard{display:flex;align-items:center;gap:10px}
+.etcard .nm{flex:1}
+.baliserow{display:flex;gap:10px;align-items:center;padding:6px 0;border-top:1px solid var(--bd);font-size:14px}
+.baliserow:first-child{border-top:0}
+.baliserow .ok{color:var(--h2);font-weight:700}
+.baliserow .bad{color:var(--st);font-weight:700}
+.folder{width:100%;text-align:left;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:8px;font:inherit;font-weight:700;color:var(--tx);display:flex;align-items:center;gap:10px}
+.folder .cnt{color:var(--mut);font-weight:600;font-size:13px}
+.folder .chev{margin-left:auto;color:var(--mut);font-weight:400}
+select{padding:10px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit;max-width:100%}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+<h1>🧭 Chrono course d'orientation</h1>
+<div id="subnav"></div>
+</header>
+<main>
+<section id="home"></section>
+<section id="chrono" hidden></section>
+<section id="etoile" hidden></section>
+<section id="cor" hidden></section>
+<section id="res" hidden></section>
+<section id="els" hidden></section>
+</main>
+<div id="modal"></div>
+<script>
+const KEY='co-chrono-v2';
+let S={classes:[]};
+try{
+  const r2=localStorage.getItem(KEY);
+  if(r2){S=JSON.parse(r2)}
+  else{
+    const r1=localStorage.getItem('co-chrono-v1');
+    if(r1){const old=JSON.parse(r1);S={classes:[{id:'c'+Date.now().toString(36),name:'Classe 1',students:old.students||[],runs:old.runs||[]}]}}
+  }
+}catch(e){}
+S.classes=S.classes||[];
+S.classes.forEach(c=>{if(!c.etoile)c.etoile={answers:{},runs:[]}});
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+let xlsxPromise=null;
+function loadXLSX(){
+  if(window.XLSX)return Promise.resolve(window.XLSX);
+  if(xlsxPromise)return xlsxPromise;
+  xlsxPromise=new Promise((res,rej)=>{
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    s.onload=()=>res(window.XLSX);
+    s.onerror=()=>{xlsxPromise=null;rej(new Error('load failed'))};
+    document.head.append(s);
+  });
+  return xlsxPromise;
+}
+const $=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,'0');
+function fmt(ms){const t=Math.max(0,Math.floor(ms/100));return Math.floor(t/600)+':'+pad(Math.floor(t%600/10))+'.'+t%10}
+function h(tag,attrs,...kids){const e=document.createElement(tag);for(const k in attrs||{}){if(k==='on')e.onclick=attrs[k];else e.setAttribute(k,attrs[k])}kids.flat().forEach(c=>e.append(c));return e}
+const live=(C,id)=>C.runs.find(r=>r.sid===id&&r.end==null);
+const fin=(C,id)=>C.runs.filter(r=>r.sid===id&&r.end!=null&&r.start>=(C.resetAt||0));
+const etLive=(C,id)=>C.etoile.runs.find(r=>r.sid===id&&r.end==null);
+const et=(C,id)=>C.etoile.runs.filter(r=>r.sid===id&&r.end!=null&&r.start>=(C.resetAt||0));
+const dur=r=>r.end-r.start;
+let view='home',currentClassId=null,confirmStop=null,confirmTimer=null,flow=null,flowTimer=null,etExpanded=new Set(),openFolders=new Set();
+function curClass(){return S.classes.find(c=>c.id===currentClassId)}
+
+function arm(btn,label,fn){let a=false;btn.onclick=()=>{if(!a){a=true;btn.textContent='Sûr ?';setTimeout(()=>{a=false;btn.textContent=label},3000);return}fn()}}
+
+/* ---------- Accueil : choix de la classe ---------- */
+function renderHome(){
+  const el=$('#home');el.replaceChildren();
+  if(!S.classes.length){el.append(h('p',{class:'hint'},'Ajoute une première classe ci-dessous.'))}
+  S.classes.forEach(c=>{
+    const go=h('button',{class:'go',on:()=>{currentClassId=c.id;show('chrono')}},
+      h('div',{class:'cn'},c.name),h('div',{class:'cs'},c.students.length+' élève'+(c.students.length>1?'s':'')+' · '+c.runs.filter(r=>r.end!=null).length+' temps enregistré'+(c.runs.filter(r=>r.end!=null).length>1?'s':'')));
+    const del=h('button',{class:'x'},'✕');
+    arm(del,'✕',()=>{S.classes=S.classes.filter(x=>x!==c);save();renderHome()});
+    el.append(h('div',{class:'classrow'},go,del));
+  });
+  const inp=h('input',{type:'text',placeholder:'Nom de la nouvelle classe'});
+  const add=()=>{
+    const name=inp.value.trim();if(!name)return;
+    const c={id:'c'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),name,students:[],runs:[],etoile:{answers:{},runs:[]}};
+    S.classes.push(c);save();inp.value='';renderHome();
+  };
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')add()});
+  el.append(h('div',{class:'row'},inp,h('button',{class:'b',on:add},'Ajouter')));
+}
+
+/* ---------- Sous-navigation dans une classe ---------- */
+function renderSubnav(){
+  const sn=$('#subnav');sn.replaceChildren();
+  if(view==='home'){sn.hidden=true;return}
+  sn.hidden=false;
+  const C=curClass();
+  sn.append(h('button',{class:'back',on:()=>{currentClassId=null;show('home')}},'← Classes · '+(C?C.name:'')));
+  const nv=h('nav',{});
+  [['chrono','Chrono'],['etoile','⭐ Étoile'],['cor','✅ Correction'],['res','🗺️ Résultats'],['els','🚩 Élèves']].forEach(([v,l])=>nv.append(h('button',{class:view===v?'on':'',on:()=>show(v)},l)));
+  sn.append(nv);
+}
+
+/* ---------- Confirmation d'arrêt ---------- */
+function askStop(s,r){confirmStop={s,r};renderModal()}
+function closeConfirm(){confirmStop=null;if(confirmTimer){clearInterval(confirmTimer);confirmTimer=null}renderModal()}
+function renderModal(){
+  const m=$('#modal');m.replaceChildren();
+  if(confirmTimer){clearInterval(confirmTimer);confirmTimer=null}
+  if(confirmStop){
+    const {s,r}=confirmStop;
+    const tmEl=h('div',{class:'tm2'},fmt(Date.now()-r.start));
+    const dial=h('div',{class:'dial'},h('div',{class:'inner'},h('div',{class:'who'},s.name),tmEl));
+    confirmTimer=setInterval(()=>{if(confirmStop)tmEl.textContent=fmt(Date.now()-confirmStop.r.start)},100);
+    const yes=h('button',{class:'b stop',on:()=>{r.end=Date.now();r.limit=curClass().limit||null;save();closeConfirm();renderChrono()}},'Oui, arrêter');
+    const no=h('button',{class:'b sec',on:closeConfirm},'Continuer');
+    m.append(h('div',{class:'ovl',on:e=>{if(e.target===e.currentTarget)closeConfirm()}},
+      h('div',{class:'confirmbox'},dial,h('p',{class:'q'},'Arrêter le chrono ?'),h('div',{class:'confirmrow'},no,yes))));
+    return;
+  }
+  if(flow){renderFlow(m);return}
+}
+
+/* ---------- Chrono ---------- */
+function renderChrono(){
+  const el=$('#chrono');el.replaceChildren();
+  const C=curClass();if(!C)return;
+  if(!C.students.length){el.append(h('p',{class:'hint'},'Ajoute d\u2019abord les prénoms dans l\u2019onglet « Élèves ».'));return}
+  const lim=h('input',{type:'text',inputmode:'text',placeholder:'ex. 15 ou 15:30'});
+  lim.value=C.limit?limitText(C.limit):'';
+  lim.onchange=()=>{C.limit=parseLimit(lim.value);save();renderChrono()};
+  el.append(h('div',{class:'row'},h('span',{class:'hint'},'⏱️ Temps limite (min) :'),lim));
+  const g=h('div',{class:'grid'});
+  C.students.forEach(s=>{
+    const r=live(C,s.id),d=fin(C,s.id),last=d[d.length-1];
+    const over=!!C.limit&&(r?Date.now()-r.start>C.limit:(last?dur(last)>C.limit:false));
+    const t=h('div',{class:'tm'+(r||last?'':' mut')},r?'0:00.0':last?fmt(dur(last)):'–');
+    if(r)t.dataset.start=r.start;
+    const btn=r?h('button',{class:'b stop',on:()=>askStop(s,r)},'Arrêter')
+               :h('button',{class:'b',on:()=>{C.runs.push({sid:s.id,start:Date.now(),end:null});save();renderChrono()}},last?'Nouveau départ':'Départ');
+    g.append(h('div',{class:'card'+(r?' run':'')+(over?' over':'')},h('div',{class:'nm'},s.name),t,h('div',{class:'hint'},d.length?d.length+(d.length>1?' essais':' essai'):'',(!r&&over)?' · +'+fmt(dur(last)-C.limit):''),btn));
+  });
+  el.append(g);
+}
+
+/* ---------- Course en étoile ---------- */
+function parseLimit(v){
+  v=String(v||'').trim().replace(',','.');if(!v)return null;
+  if(v.includes(':')){const [m,s]=v.split(':');const ms=(parseInt(m,10)||0)*60000+(parseInt(s,10)||0)*1000;return ms>0?ms:null}
+  const n=parseFloat(v);return n>0?Math.round(n*60000):null;
+}
+function limitText(ms){const t=Math.round(ms/1000);return Math.floor(t/60)+(t%60?':'+pad(t%60):'')}
+function normCode(v){return String(v==null?'':v).trim().toUpperCase()}
+async function importBalises(C,file){
+  const ext=(file.name.split('.').pop()||'').toLowerCase();
+  let rows;
+  if(ext==='csv'){
+    const text=await file.text();
+    rows=text.split(/\r?\n/).filter(l=>l.trim()).map(l=>l.split(/[;,]/).map(c=>c.trim()));
+  } else {
+    const XLSX=await loadXLSX();
+    const buf=await file.arrayBuffer();
+    const wb=XLSX.read(buf,{type:'array'});
+    const sheet=wb.Sheets[wb.SheetNames[0]];
+    rows=XLSX.utils.sheet_to_json(sheet,{header:1,raw:false,defval:''});
+  }
+  let start=0;
+  if(rows.length&&isNaN(parseInt(rows[0][0],10)))start=1;
+  const answers={};
+  for(let i=start;i<rows.length;i++){
+    const r=rows[i];if(!r||!r.length)continue;
+    const num=parseInt(r[0],10);if(isNaN(num))continue;
+    answers[num]={haut:normCode(r[1]),bas:normCode(r[2]),gauche:normCode(r[3]),droite:normCode(r[4])};
+  }
+  C.etoile.answers=answers;save();
+}
+function openFlow(s){flow={sid:s.id,step:'orientation',orientation:null,balise:'',resultat:'',correct:null,expected:null,err:''};renderModal()}
+function closeFlow(){flow=null;renderModal()}
+function renderFlow(m){
+  const C=curClass();
+  const box=h('div',{class:'confirmbox'});
+  if(flow.step==='orientation'){
+    box.append(h('p',{class:'q'},'Quelle direction avais-tu ?'),
+      h('div',{class:'cross'},
+        h('span',{}),h('button',{on:()=>{flow.orientation='haut';flow.step='balise';renderModal()}},'↑'),h('span',{}),
+        h('button',{on:()=>{flow.orientation='gauche';flow.step='balise';renderModal()}},'←'),h('span',{}),h('button',{on:()=>{flow.orientation='droite';flow.step='balise';renderModal()}},'→'),
+        h('span',{}),h('button',{on:()=>{flow.orientation='bas';flow.step='balise';renderModal()}},'↓'),h('span',{})),
+      h('div',{class:'confirmrow'},h('button',{class:'b sec',on:closeFlow},'Annuler')));
+  } else if(flow.step==='balise'||flow.step==='resultat'){
+    const field=flow.step==='balise'?'balise':'resultat';
+    box.append(h('p',{class:'q'},flow.step==='balise'?'Numéro de balise recherché :':'Résultat trouvé :'));
+    if(flow.err)box.append(h('p',{class:'hint'},flow.err));
+    box.append(h('div',{class:'paddisp'},flow[field]||'–'));
+    const grid=h('div',{class:'padgrid'});
+    ['1','2','3','4','5','6','7','8','9'].forEach(d=>grid.append(h('button',{on:()=>{flow[field]=(flow[field]+d).slice(0,4);renderModal()}},d)));
+    grid.append(h('button',{on:()=>{flow[field]='';renderModal()}},'C'));
+    grid.append(h('button',{on:()=>{flow[field]=(flow[field]+'0').slice(0,4);renderModal()}},'0'));
+    grid.append(h('button',{on:()=>{flow[field]=flow[field].slice(0,-1);renderModal()}},'⌫'));
+    box.append(grid);
+    const validate=()=>{
+      if(!flow[field])return;
+      if(field==='balise'){
+        const already=C.etoile.runs.some(r=>r.sid===flow.sid&&r.correct&&String(r.balise)===String(flow.balise));
+        if(already){flow.err='Tu as déjà trouvé cette balise, choisis-en une autre.';renderModal();return}
+        flow.err='';flow.step='resultat';renderModal();return;
+      }
+      const ans=C.etoile.answers[parseInt(flow.balise,10)];
+      if(!ans){flow.err='Balise inconnue, vérifie le numéro.';flow.step='balise';renderModal();return}
+      const expected=ans[flow.orientation];
+      const correct=normCode(flow.resultat)===expected;
+      const r=etLive(C,flow.sid);
+      if(r){r.end=Date.now();r.balise=flow.balise;r.orientation=flow.orientation;r.entered=flow.resultat;r.correct=correct;save()}
+      flow.correct=correct;flow.expected=expected;flow.step='verdict';renderModal();
+    };
+    box.append(h('div',{class:'confirmrow'},h('button',{class:'b sec',on:closeFlow},'Annuler'),h('button',{class:'b',on:validate},'Valider')));
+  } else if(flow.step==='verdict'){
+    box.append(h('div',{class:'verdict '+(flow.correct?'ok':'bad')},flow.correct?'✅ Juste !':'❌ Faux'));
+    box.append(h('div',{class:'confirmrow'},h('button',{class:'b',on:()=>{
+      C.etoile.runs.push({sid:flow.sid,start:Date.now(),end:null,balise:null,orientation:null,entered:null,correct:null});
+      save();closeFlow();renderEtoile();
+    }},'Continuer')));
+  }
+  m.append(h('div',{class:'ovl',on:e=>{if(e.target===e.currentTarget)closeFlow()}},box));
+}
+function renderEtoile(){
+  const el=$('#etoile');el.replaceChildren();
+  const C=curClass();if(!C)return;
+  const nb=Object.keys(C.etoile.answers).length;
+  const msg=h('p',{class:'hint'},'');
+  const file=h('input',{type:'file',accept:'.xlsx,.xls,.csv'});
+  file.onchange=async()=>{
+    if(!file.files[0])return;
+    msg.textContent='Import en cours…';
+    try{await importBalises(C,file.files[0]);msg.textContent=Object.keys(C.etoile.answers).length+' balises importées.';renderEtoile()}
+    catch(e){msg.textContent='Import impossible (fichier .xlsx : connexion internet nécessaire la première fois ; sinon exporte en .csv).'}
+  };
+  el.append(h('div',{class:'card imp'},h('h2',{},'📋 Réponses des balises'),
+    h('p',{class:'hint'},nb?nb+' balise'+(nb>1?'s':'')+' chargée'+(nb>1?'s':'')+'.':'Aucune balise chargée pour le moment.'),
+    h('p',{class:'hint'},'Fichier avec une ligne par balise : numéro, réponse haut, bas, gauche, droite (dans cet ordre). Formats acceptés : .xlsx ou .csv.'),
+    h('div',{class:'row'},file),msg));
+
+  if(!C.students.length){el.append(h('p',{class:'hint'},'Ajoute d\u2019abord les prénoms dans l\u2019onglet « Élèves ».'));return}
+  const g=h('div',{class:'grid'});
+  C.students.forEach(s=>{
+    const r=etLive(C,s.id),d=et(C,s.id);
+    const okN=d.filter(x=>x.correct).length,koN=d.filter(x=>!x.correct).length;
+    const t=h('div',{class:'tm'+(r?'':' mut')},r?'0:00.0':'–');
+    if(r)t.dataset.start=r.start;
+    const card=h('div',{class:'card'+(r?' run':'')},h('div',{class:'nm'},s.name),t,h('div',{class:'hint'},d.length?('✓'+okN+' · ✗'+koN):''));
+    if(r){
+      card.append(h('button',{class:'b',on:()=>openFlow(s)},'Entrer un résultat'));
+      const stop=h('button',{class:'b sec'},'🏁 Terminer la course');
+      arm(stop,'🏁 Terminer la course',()=>{C.etoile.runs=C.etoile.runs.filter(x=>x!==r);save();renderEtoile()});
+      card.append(stop);
+    } else {
+      card.append(h('button',{class:'b',on:()=>{C.etoile.runs.push({sid:s.id,start:Date.now(),end:null,balise:null,orientation:null,entered:null,correct:null});save();renderEtoile()}},d.length?'Nouveau départ':'Départ'));
+    }
+    g.append(card);
+  });
+  el.append(g);
+}
+let sortBy='eleve';
+function dateKeyOf(ts){return new Date(ts).toISOString().slice(0,10)}
+function dateLabelOf(key){return new Date(key+'T00:00:00').toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
+function folderBtn(key,label,count,re){
+  const open=openFolders.has(key);
+  const b=h('button',{class:'folder',on:()=>{if(open)openFolders.delete(key);else openFolders.add(key);(re||renderRes)()}},
+    h('span',{},'📁'),h('span',{},label),h('span',{class:'cnt'},count),h('span',{class:'chev'},open?'▾':'▸'));
+  return b;
+}
+function renderRes(){
+  const el=$('#res');el.replaceChildren();
+  const C=curClass();if(!C)return;
+
+  /* ---- Chrono (course d'orientation), par dossier de date ---- */
+  el.append(h('h2',{},'🧭 Chrono'));
+  const allRuns=C.runs.filter(r=>r.end!=null);
+  if(!allRuns.length){el.append(h('p',{class:'hint'},'Aucun temps de chrono enregistré pour le moment.'))}
+  else{
+    const byDateC={};
+    allRuns.forEach(r=>{(byDateC[dateKeyOf(r.start)]=byDateC[dateKeyOf(r.start)]||[]).push(r)});
+    const dateKeysC=Object.keys(byDateC).sort((a,b)=>b.localeCompare(a));
+    const seg=h('div',{class:'row'});
+    [['eleve','Par élève'],['temps','Par temps'],['date','Chronologique']].forEach(([k,l])=>seg.append(h('button',{class:'b'+(sortBy===k?'':' sec'),on:()=>{sortBy=k;renderRes()}},l)));
+    el.append(seg);
+    dateKeysC.forEach(key=>{
+      const dayRuns=byDateC[key];
+      const all=dayRuns.map(r=>({r,s:C.students.find(x=>x.id===r.sid)})).filter(x=>x.s).sort((a,b)=>a.r.start-b.r.start);
+      const fkey='c-'+key;
+      el.append(folderBtn(fkey,dateLabelOf(key),all.length+' tentative'+(all.length>1?'s':'')));
+      if(!openFolders.has(fkey))return;
+      const cnt={};all.forEach(x=>{cnt[x.s.id]=(cnt[x.s.id]||0)+1;x.n=cnt[x.s.id]});
+      const rows=[...all];
+      if(sortBy==='eleve')rows.sort((a,b)=>a.s.name.localeCompare(b.s.name,'fr')||a.r.start-b.r.start);
+      else if(sortBy==='temps')rows.sort((a,b)=>dur(a.r)-dur(b.r));
+      const tb=h('tbody');
+      rows.forEach(x=>{
+        const d=new Date(x.r.start);
+        const del=h('button',{class:'x'},'✕');
+        arm(del,'✕',()=>{C.runs=C.runs.filter(y=>y!==x.r);save();renderRes()});
+        tb.append(h('tr',{},h('td',{},x.s.name),h('td',{},'n°'+x.n),h('td',{},pad(d.getHours())+':'+pad(d.getMinutes())),h('td',{},h('b',{},fmt(dur(x.r)))),h('td',{class:'ov'},(x.r.limit&&dur(x.r)>x.r.limit)?'+'+fmt(dur(x.r)-x.r.limit):''),h('td',{},x.r.corr?'✓'+x.r.corr.ok+' · ✗'+x.r.corr.ko:''),h('td',{},del)));
+      });
+      el.append(h('div',{class:'card'},h('div',{class:'scroll'},h('table',{},h('thead',{},h('tr',{},h('th',{},'Élève'),h('th',{},'Essai'),h('th',{},'Heure'),h('th',{},'Temps'),h('th',{},'Dépassement'),h('th',{},'Balises'),h('th',{},''))),tb))));
+    });
+    const msg=h('p',{class:'hint'},'');
+    const ex=h('button',{class:'b',on:async()=>{
+      const lines=['Classe;Prénom;Essai;Date;Heure de départ;Temps (s);Temps;Temps limite;Dépassement;Balises justes;Balises fausses;Circuit'];
+      const allA=allRuns.map(r=>({r,s:C.students.find(x=>x.id===r.sid)})).filter(x=>x.s);
+      const cnt={};allA.forEach(x=>{cnt[x.s.id]=(cnt[x.s.id]||0)+1;x.n=cnt[x.s.id]});
+      allA.forEach(x=>{const d=new Date(x.r.start);
+        lines.push([C.name,x.s.name,x.n,d.toLocaleDateString('fr-FR'),pad(d.getHours())+':'+pad(d.getMinutes()),(dur(x.r)/1000).toFixed(1).replace('.',','),fmt(dur(x.r)),x.r.limit?fmt(x.r.limit):'',(x.r.limit&&dur(x.r)>x.r.limit)?fmt(dur(x.r)-x.r.limit):'',x.r.corr?x.r.corr.ok:'',x.r.corr?x.r.corr.ko:'',x.r.corr&&x.r.corr.circuit?circLabel(x.r.corr.circuit):''].join(';'))});
+      try{const dl=await claude.use('downloads');if(!dl)throw 0;await dl.save({filename:'temps-course-orientation-'+C.name.replace(/[^a-z0-9]+/gi,'-')+'.csv',data:'\ufeff'+lines.join('\n')});msg.textContent='Fichier enregistré.'}
+      catch(e){if(e&&e.code==='declined')return;try{await navigator.clipboard.writeText(lines.join('\n'));msg.textContent='Copié dans le presse-papiers (à coller dans un tableur).'}catch(_){msg.textContent='Export indisponible sur cet appareil.'}}
+    }},'Exporter en CSV');
+    el.append(h('div',{class:'row'},ex),msg);
+  }
+
+  /* ---- Course en étoile, par dossier de date ---- */
+  el.append(h('h2',{},'⭐ Étoile'));
+  const finished=C.etoile.runs.filter(r=>r.end!=null);
+  if(!finished.length){el.append(h('p',{class:'hint'},'Aucun résultat de course en étoile pour le moment.'));return}
+  const byDate={};
+  finished.forEach(r=>{(byDate[dateKeyOf(r.start)]=byDate[dateKeyOf(r.start)]||[]).push(r)});
+  const dateKeys=Object.keys(byDate).sort((a,b)=>b.localeCompare(a));
+  const ORLBL={haut:'Haut',bas:'Bas',gauche:'Gauche',droite:'Droite'};
+  dateKeys.forEach(key=>{
+    const runs=byDate[key];
+    const bySid={};
+    runs.forEach(r=>{
+      const st=bySid[r.sid]=bySid[r.sid]||{sid:r.sid,ok:0,ko:0,totalMs:0,runs:[]};
+      if(r.correct)st.ok++;else st.ko++;
+      st.totalMs+=dur(r);st.runs.push(r);
+    });
+    const rows=Object.values(bySid).map(st=>({...st,s:C.students.find(x=>x.id===st.sid)})).filter(x=>x.s);
+    rows.sort((a,b)=>b.ok-a.ok||a.totalMs-b.totalMs);
+    const fkey='e-'+key;
+    el.append(folderBtn(fkey,dateLabelOf(key),rows.length+' élève'+(rows.length>1?'s':'')));
+    if(!openFolders.has(fkey))return;
+    const tb2=h('tbody');
+    rows.forEach((x,i)=>{
+      const ek=x.sid+'|'+key;
+      const openB=h('button',{class:'x'},etExpanded.has(ek)?'▴ Détail':'▾ Détail');
+      openB.onclick=()=>{if(etExpanded.has(ek))etExpanded.delete(ek);else etExpanded.add(ek);renderRes()};
+      const del=h('button',{class:'x'},'✕');
+      arm(del,'✕',()=>{C.etoile.runs=C.etoile.runs.filter(r=>!(r.sid===x.sid&&dateKeyOf(r.start)===key));save();renderRes()});
+      tb2.append(h('tr',{},h('td',{},String(i+1)),h('td',{},x.s.name),h('td',{},String(x.ok)),h('td',{},String(x.ko)),h('td',{},fmt(x.totalMs)),h('td',{},openB),h('td',{},del)));
+      if(etExpanded.has(ek)){
+        const detail=h('td',{colspan:'7'});
+        const list=x.runs.slice().sort((a,b)=>a.start-b.start);
+        list.forEach(r=>{
+          detail.append(h('div',{class:'baliserow'},
+            h('span',{},'Balise '+(r.balise!=null?r.balise:'?')),
+            h('span',{},ORLBL[r.orientation]||r.orientation||''),
+            h('span',{},r.entered||''),
+            h('span',{class:r.correct?'ok':'bad'},r.correct?'✓ juste':'✗ faux')));
+        });
+        tb2.append(h('tr',{},detail));
+      }
+    });
+    el.append(h('div',{class:'card'},h('div',{class:'scroll'},h('table',{},h('thead',{},h('tr',{},h('th',{},'#'),h('th',{},'Élève'),h('th',{},'Justes'),h('th',{},'Fausses'),h('th',{},'Temps total'),h('th',{},''),h('th',{},''))),tb2))));
+  });
+}
+
+/* ---------- Correction des cartons ---------- */
+let cor=null,tessPromise=null,ocrWorker=null;
+const CDN='https://cdn.jsdelivr.net/npm/';
+const ORD=['haut','droite','bas','gauche'],ARW={haut:'↑',bas:'↓',gauche:'←',droite:'→'};
+function loadTess(){
+  if(window.Tesseract)return Promise.resolve(window.Tesseract);
+  if(tessPromise)return tessPromise;
+  tessPromise=new Promise((res,rej)=>{
+    const sc=document.createElement('script');
+    sc.src=CDN+'tesseract.js@5.1.1/dist/tesseract.min.js';
+    sc.onload=()=>res(window.Tesseract);
+    sc.onerror=()=>{tessPromise=null;rej(new Error('load failed'))};
+    document.head.append(sc);
+  });
+  return tessPromise;
+}
+async function getWorker(){
+  if(ocrWorker)return ocrWorker;
+  const T=await loadTess();
+  const w=await T.createWorker('eng',1,{
+    workerPath:CDN+'tesseract.js@5.1.1/dist/worker.min.js',
+    corePath:CDN+'tesseract.js-core@5.1.0',
+    langPath:CDN+'@tesseract.js-data/eng@1.0.0/4.0.0_best_int'
+  });
+  await w.setParameters({tessedit_char_whitelist:'0123456789',tessedit_pageseg_mode:'11'});
+  ocrWorker=w;return w;
+}
+async function prepImage(file){
+  const url=URL.createObjectURL(file);
+  const img=await new Promise((ok,ko)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=ko;i.src=url});
+  const sc=Math.min(1,2000/Math.max(img.naturalWidth,img.naturalHeight));
+  const cv=document.createElement('canvas');cv.width=Math.round(img.naturalWidth*sc);cv.height=Math.round(img.naturalHeight*sc);
+  const cx=cv.getContext('2d',{willReadFrequently:true});cx.drawImage(img,0,0,cv.width,cv.height);
+  const id=cx.getImageData(0,0,cv.width,cv.height),p=id.data,col=new Uint8ClampedArray(p),hist=new Array(256).fill(0);
+  for(let i=0;i<p.length;i+=4){const g=Math.round(.299*p[i]+.587*p[i+1]+.114*p[i+2]);p[i]=p[i+1]=p[i+2]=g;hist[g]++}
+  const n=p.length/4;let a=0,lo=0,hi=255;
+  for(let g=0;g<256;g++){a+=hist[g];if(a>=n*.02){lo=g;break}}
+  a=0;for(let g=255;g>=0;g--){a+=hist[g];if(a>=n*.02){hi=g;break}}
+  const k=hi>lo?255/(hi-lo):1;
+  for(let i=0;i<p.length;i+=4){const g=Math.max(0,Math.min(255,(p[i]-lo)*k));p[i]=p[i+1]=p[i+2]=g}
+  cx.putImageData(id,0,0);
+  return {url,cv,col,W:cv.width,H:cv.height};
+}
+function wordsOf(d){return d.words||(d.blocks||[]).flatMap(b=>b.paragraphs.flatMap(p=>p.lines.flatMap(l=>l.words)))}
+const DG=[[[-0,-0,0,-0,-0,0,0,-0,0,-0.5799999833106995,-0.05999999865889549,0.46000000834465027,1.100000023841858,0.9100000262260437,0.029999999329447746,-0,-0,-0.6700000166893005,0.23000000417232513,-1.2300000190734863,-1.9900000095367432,-2.049999952316284,0.05000000074505806,0,0,-0.25999999046325684,0.3799999952316284,0.20000000298023224,0.6899999976158142,-0.6499999761581421,0.03999999910593033,0,0,1,1.7200000286102295,0.9900000095367432,-0.25,-0.019999999552965164,0.1899999976158142,0,0,-0.9100000262260437,-0.9100000262260437,-0.3100000023841858,-0.25999999046325684,-0.07999999821186066,0.20999999344348907,-0,0,-0.4099999964237213,0.10000000149011612,-0.11999999731779099,0.699999988079071,0.7699999809265137,0.10000000149011612,0,0,0,0,-0,0,-0,0,0],[0,-0,-0,0,0,0,-0,-0,-0,0.12999999523162842,-0.05000000074505806,-0.17000000178813934,0.23999999463558197,-0.4300000071525574,-0.009999999776482582,-0,-0,0.7300000190734863,0.15000000596046448,0.23000000417232513,-0.009999999776482582,0.10999999940395355,0.019999999552965164,0,-0,0.12999999523162842,-0.10000000149011612,0.23999999463558197,0.6200000047683716,0.3499999940395355,0.15000000596046448,0,-0,-0.46000000834465027,0.3100000023841858,0.44999998807907104,-0.20999999344348907,-1.0399999618530273,-0.14000000059604645,0,-0,0.5299999713897705,-0.7900000214576721,-0.33000001311302185,-0.3400000035762787,0.3700000047683716,0.10000000149011612,0,-0,0.4399999976158142,0.07999999821186066,0.12999999523162842,0.38999998569488525,0.6100000143051147,0.07000000029802322,0,0,0,-0,-0,-0,0,0,0],[-0,0,-0,-0,-0,0,0,-0,-0,0.15000000596046448,-0.6399999856948853,-0.41999998688697815,0.8500000238418579,0.25999999046325684,-0.14000000059604645,0,0,-0.2800000011920929,-0.27000001072883606,0.9900000095367432,-0.1899999976158142,0.41999998688697815,0.10000000149011612,0,-0,-1.399999976158142,0.07999999821186066,-0.8500000238418579,-0.4699999988079071,1.7999999523162842,0.18000000715255737,-0,0,0.23999999463558197,0.9800000190734863,-0.5099999904632568,-1,-2.5399999618530273,-0.10999999940395355,-0,0,0.8899999856948853,-0.6399999856948853,0.8700000047683716,0.4099999964237213,0.14000000059604645,-0.20000000298023224,0,-0,-0.10000000149011612,-0.25999999046325684,-0.7200000286102295,0.41999998688697815,0.8600000143051147,-0.20999999344348907,0,-0,-0,0,0,-0,-0,-0,0],[-0,-0,-0,-0,0,0,-0,-0,0,0.4099999964237213,-0.5899999737739563,-0.7400000095367432,-0.4699999988079071,0,0.10999999940395355,0,0,-0.25,0.7400000095367432,-0.47999998927116394,0.4099999964237213,-1.0800000429153442,-0.03999999910593033,0,-0,0.3799999952316284,0.6399999856948853,-0.23000000417232513,0.6000000238418579,1.1299999952316284,-0.14000000059604645,-0,0,0.4000000059604645,0.10000000149011612,-0.7699999809265137,-0.699999988079071,0.7400000095367432,0.3799999952316284,0,0,-0.8600000143051147,-0.4300000071525574,-1.1200000047683716,0.33000001311302185,0.7900000214576721,-0.05000000074505806,0,0,1.0299999713897705,0.5400000214576721,0.7200000286102295,0.23999999463558197,0.7900000214576721,-0.07999999821186066,-0,0,0,0,0,0,-0,0,-0],[0,0,-0,0,0,0,0,0,-0,-0.5,0.4300000071525574,-0.6499999761581421,-0.12999999523162842,0.8399999737739563,0.18000000715255737,0,0,-1.5399999618530273,-0.4000000059604645,1.2599999904632568,0.2800000011920929,-0.20999999344348907,0.4399999976158142,0,0,-0.1899999976158142,-0.8100000023841858,0.6100000143051147,-0.09000000357627869,-0.33000001311302185,0.05999999865889549,0,-0,-1.1299999952316284,0.1899999976158142,-0.49000000953674316,-0.3400000035762787,0.5400000214576721,-0.03999999910593033,-0,-0,-1.2599999904632568,1.0099999904632568,-1.3200000524520874,0.9599999785423279,-0.9599999785423279,-0,0,-0,-0.46000000834465027,-0.17000000178813934,0.9399999976158142,-0.6600000262260437,-0.3499999940395355,-0,-0,0,-0,-0,0,0,0,0,-0],[-0,0,-0,-0,0,0,0,0,-0,0.47999998927116394,-0.44999998807907104,0.25,0.7099999785423279,0.36000001430511475,0.23000000417232513,-0,-0,0.6499999761581421,-0.10000000149011612,0.7699999809265137,0.7099999785423279,0.949999988079071,0.03999999910593033,0,0,-0.029999999329447746,0.25,-0.5,-0.5099999904632568,-0.14000000059604645,-0.07999999821186066,0,-0,-0.05999999865889549,-0.5099999904632568,-0.4300000071525574,-0.47999998927116394,-0.6800000071525574,0.11999999731779099,0,-0,0.3100000023841858,-0.12999999523162842,-0.1599999964237213,0.10000000149011612,-0.30000001192092896,0.15000000596046448,0,-0,0.05999999865889549,0.6200000047683716,1.2899999618530273,0.5400000214576721,0.27000001072883606,0.1599999964237213,0,0,0,-0,0,-0,-0,0,-0],[-0,-0,0,-0,-0,-0,0,-0,-0,0.2800000011920929,0.14000000059604645,-0.15000000596046448,0.7799999713897705,0.800000011920929,0.20999999344348907,-0,0,-0.44999998807907104,-0.5299999713897705,0.23000000417232513,0.029999999329447746,-0.029999999329447746,0.03999999910593033,0,-0,0.009999999776482582,0.20999999344348907,0.20999999344348907,0.03999999910593033,-0.8199999928474426,-0.05999999865889549,0,0,-0.17000000178813934,-0.3499999940395355,-0.05000000074505806,-0.009999999776482582,-0.019999999552965164,-0.07000000029802322,-0,0,0.3799999952316284,0.12999999523162842,0.07999999821186066,0.05999999865889549,0.12999999523162842,-0.07999999821186066,-0,-0,0.009999999776482582,0.03999999910593033,0.4399999976158142,0.47999998927116394,1.0199999809265137,-0.05999999865889549,0,-0,0,-0,-0,-0,0,0,0],[0,0,0,-0,-0,-0,0,-0,0,-0.8299999833106995,-0.949999988079071,0.20000000298023224,0.6100000143051147,0.2199999988079071,-0.3199999928474426,0,0,1.2200000286102295,-0.4399999976158142,-0.4300000071525574,-0.5600000023841858,-1.0299999713897705,-0.27000001072883606,0,-0,0.9800000190734863,0.6600000262260437,-1,-0.07000000029802322,0.5199999809265137,0.07000000029802322,-0,-0,-0.3799999952316284,1.149999976158142,0.8700000047683716,0.7799999713897705,0.4300000071525574,-0.019999999552965164,0,-0,-0.009999999776482582,0.07000000029802322,-0.5099999904632568,-0.27000001072883606,0.10999999940395355,-0.1599999964237213,0,-0,0.25999999046325684,-0.7799999713897705,0.5299999713897705,0.46000000834465027,-0.3700000047683716,-0.07999999821186066,-0,-0,0,-0,-0,-0,-0,-0,0],[-0,-0,0,0,-0,0,0,0,0,-0.12999999523162842,-0.3499999940395355,-0.36000001430511475,-0.18000000715255737,0.14000000059604645,-0.3199999928474426,0,0,-0.07999999821186066,0.3700000047683716,0.3199999928474426,-0.18000000715255737,-0.1899999976158142,-0.4099999964237213,0,0,0.2199999988079071,0.11999999731779099,-0.5699999928474426,-0.949999988079071,-0.05000000074505806,-0.46000000834465027,0,-0,0.8299999833106995,0.03999999910593033,-0.8700000047683716,0.550000011920929,0.8999999761581421,-0.4099999964237213,-0,-0,1.3600000143051147,0.8299999833106995,-0.8299999833106995,1.5499999523162842,0.6499999761581421,-1.2999999523162842,-0,-0,-0.7200000286102295,-0.07000000029802322,0.41999998688697815,0.8100000023841858,0.4099999964237213,-1.0099999904632568,-0,0,0,-0,-0,-0,-0,0,-0],[0,0,0,0,-0,-0,-0,0,-0,-0.009999999776482582,-1.0099999904632568,-0.7300000190734863,0.05000000074505806,0.2800000011920929,-0.5600000023841858,0,-0,0.3100000023841858,0.28999999165534973,-0.6499999761581421,-0.10000000149011612,0.5600000023841858,-0.3499999940395355,0,-0,-0.8799999952316284,-0.20999999344348907,0.8500000238418579,0.6299999952316284,-0.3400000035762787,0.10000000149011612,-0,-0,0.2199999988079071,0.4300000071525574,0.44999998807907104,0.09000000357627869,-1.1200000047683716,-0.029999999329447746,0,0,0.9399999976158142,0.7599999904632568,0.5199999809265137,-0.28999999165534973,-0.25999999046325684,-0.07000000029802322,0,0,-0.20000000298023224,-0.46000000834465027,0.30000001192092896,0.7599999904632568,1.1699999570846558,-0.09000000357627869,-0,0,0,-0,0,0,0,-0,0],[0,-0,-0,-0,-0,0,-0,0,0,-0.75,0.46000000834465027,-0.15000000596046448,0.27000001072883606,0.20999999344348907,-0.12999999523162842,-0,0,-0.8899999856948853,-0.800000011920929,0.27000001072883606,-0.2800000011920929,-0.27000001072883606,0.49000000953674316,0,0,0.5600000023841858,0.3700000047683716,0.5600000023841858,0.2800000011920929,-0.9599999785423279,-0.07000000029802322,-0,-0,-0.6899999976158142,0.30000001192092896,0.6000000238418579,1.2200000286102295,0.5299999713897705,-0.029999999329447746,0,0,-0.09000000357627869,0.1899999976158142,0.6299999952316284,-0.25,-0.6100000143051147,-0.009999999776482582,-0,0,-0.03999999910593033,-0.3499999940395355,-1.2699999809265137,-0.6700000166893005,-0.3499999940395355,-0.009999999776482582,0,-0,-0,0,-0,-0,-0,-0,-0],[0,0,0,0,0,-0,-0,0,-0,-1.340000033378601,0.5099999904632568,0.3799999952316284,1.1299999952316284,0.9399999976158142,0.07999999821186066,-0,0,-1.3700000047683716,-0.1899999976158142,0.30000001192092896,-0.3400000035762787,0.6100000143051147,-0.5400000214576721,0,-0,-1.340000033378601,0.3499999940395355,0.44999998807907104,-1.2300000190734863,1.0499999523162842,-0.30000001192092896,0,-0,-0.47999998927116394,-1.4299999475479126,0.23999999463558197,-0.1899999976158142,1.0800000429153442,-0.6200000047683716,0,-0,0.8199999928474426,-0.6100000143051147,-0.28999999165534973,-0.49000000953674316,-0.12999999523162842,-0.7099999785423279,-0,-0,0.46000000834465027,0.019999999552965164,-0.33000001311302185,-0.03999999910593033,0.5199999809265137,-0.4699999988079071,0,-0,-0,0,0,-0,-0,-0,0],[-0,-0,-0,-0,-0,-0,-0,-0,0,1.5499999523162842,-0.5799999833106995,-0.07999999821186066,-0.11999999731779099,-0.23000000417232513,-0.30000001192092896,-0,0,0.8799999952316284,0.28999999165534973,-1.3200000524520874,0.6600000262260437,-0.49000000953674316,-0.47999998927116394,-0,0,-0.12999999523162842,1.0099999904632568,-0.3799999952316284,-0.14000000059604645,1.0299999713897705,-0.23999999463558197,0,-0,0.3199999928474426,-0.23999999463558197,-0.6299999952316284,0,-0.41999998688697815,-0.699999988079071,-0,0,0.09000000357627869,-0.49000000953674316,0.6200000047683716,1.6699999570846558,-0.07999999821186066,0.5600000023841858,0,-0,0.18000000715255737,0.12999999523162842,-0.7300000190734863,-0.17000000178813934,-0.019999999552965164,0.3499999940395355,-0,-0,0,-0,-0,0,0,-0,-0],[-0,0,0,-0,-0,0,0,-0,-0,-0.699999988079071,-0.5400000214576721,-0.09000000357627869,0.8799999952316284,1.350000023841858,-0.33000001311302185,0,-0,0.03999999910593033,-0.6499999761581421,0.23999999463558197,-0.3499999940395355,-3.3499999046325684,-0.23999999463558197,-0,0,0.3400000035762787,0.3499999940395355,-0.05000000074505806,-1.149999976158142,-0.46000000834465027,0.18000000715255737,-0,-0,-0.3700000047683716,0.7400000095367432,-0.8299999833106995,0.47999998927116394,2.5299999713897705,1.340000033378601,-0,0,0.03999999910593033,-0.10999999940395355,0.14000000059604645,0.3499999940395355,0.05999999865889549,0.5799999833106995,-0,0,-0.20000000298023224,-0.15000000596046448,-0.019999999552965164,0.10000000149011612,-0.17000000178813934,0.6200000047683716,-0,-0,-0,-0,0,-0,-0,-0,0],[-0,0,0,0,0,0,0,0,0,-0.05999999865889549,0.019999999552965164,0.1899999976158142,1.1299999952316284,0.800000011920929,-0.28999999165534973,-0,0,0.4300000071525574,-0.3499999940395355,-0.3400000035762787,-1.059999942779541,0.47999998927116394,-0.550000011920929,0,-0,-0.6499999761581421,1.0299999713897705,0.25999999046325684,0.1899999976158142,-0.5299999713897705,-0.09000000357627869,0,-0,-0.20000000298023224,0.3499999940395355,-0.2800000011920929,0.49000000953674316,0.2199999988079071,0.019999999552965164,-0,0,-0.3799999952316284,-1.0800000429153442,-0.9399999976158142,0.6499999761581421,0.3100000023841858,0.009999999776482582,-0,-0,0.9399999976158142,0.8399999737739563,0.28999999165534973,-0.6899999976158142,-1.7000000476837158,-0,-0,0,-0,0,-0,0,0,-0,0],[-0,-0,0,0,0,0,-0,0,0,0.75,0.699999988079071,0.46000000834465027,0.009999999776482582,-0.9700000286102295,0.3100000023841858,0,0,-0.4300000071525574,-0.9599999785423279,-0.4300000071525574,-0.20000000298023224,-0.8899999856948853,0.4000000059604645,0,-0,-0.8600000143051147,0.17000000178813934,1.9700000286102295,-0.8600000143051147,-0.5699999928474426,0,0,0,1.1200000047683716,0.18000000715255737,0.9900000095367432,-0.12999999523162842,-0.1899999976158142,-0.05000000074505806,-0,-0,0.18000000715255737,0.1899999976158142,0.5299999713897705,0.17000000178813934,-0.49000000953674316,-0.17000000178813934,0,0,1.1200000047683716,0.25999999046325684,0.009999999776482582,0.6700000166893005,-0.029999999329447746,0.029999999329447746,-0,-0,-0,-0,-0,0,-0,-0,-0],[0,0,-0,0,0,0,-0,-0,-0,-0.6100000143051147,-0.12999999523162842,-0.009999999776482582,-0.5099999904632568,-0.25999999046325684,-0.20999999344348907,-0,0,0.3400000035762787,0.47999998927116394,-0.25,-0.019999999552965164,0.5799999833106995,-0.30000001192092896,0,-0,0.4699999988079071,0.5799999833106995,0.6299999952316284,0.029999999329447746,0.6299999952316284,0.15000000596046448,-0,-0,0.33000001311302185,0.7799999713897705,0.1899999976158142,0.6399999856948853,0.4000000059604645,0.14000000059604645,0,0,0.7699999809265137,0.6100000143051147,0.23999999463558197,0.4399999976158142,0.6899999976158142,-0.019999999552965164,0,0,-0.6299999952316284,-0.18000000715255737,0,0.2800000011920929,0.3100000023841858,0.10999999940395355,0,0,0,-0,0,0,0,0,0],[0,-0,0,0,-0,0,-0,-0,0,0.25,0.019999999552965164,0.20000000298023224,0.15000000596046448,0.23999999463558197,-0.7200000286102295,0,0,0.8399999737739563,1.149999976158142,-0.03999999910593033,0.699999988079071,0.30000001192092896,-0.38999998569488525,0,0,0.10999999940395355,-0.009999999776482582,0.6100000143051147,0.9700000286102295,0.47999998927116394,0.07000000029802322,0,0,-0.25999999046325684,-0.6499999761581421,1.3799999952316284,0.6899999976158142,-0.5299999713897705,0.09000000357627869,0,-0,-1.0299999713897705,-0.7300000190734863,-1.2599999904632568,-1.2799999713897705,-0.07000000029802322,-0.25999999046325684,-0,-0,-0.20000000298023224,-0.38999998569488525,-0.1599999964237213,-0.6499999761581421,-1.149999976158142,-0.1899999976158142,0,0,0,-0,0,-0,-0,-0,0],[0,-0,-0,0,-0,-0,0,-0,-0,-0.5799999833106995,-0,-0.5099999904632568,-0.11999999731779099,0.5299999713897705,0.019999999552965164,-0,0,-0.05999999865889549,0.4099999964237213,-0.4300000071525574,-0.15000000596046448,-0.3499999940395355,0.09000000357627869,0,0,0.11999999731779099,-0.46000000834465027,-0.05999999865889549,0.20000000298023224,-1.309999942779541,0.029999999329447746,0,0,-0.550000011920929,-1.0199999809265137,0.44999998807907104,0.6600000262260437,-0.05999999865889549,0.09000000357627869,-0,0,-0.5099999904632568,-0.25,0.44999998807907104,0.27000001072883606,0.6899999976158142,-0.15000000596046448,0,0,0.5799999833106995,0.6100000143051147,0.3400000035762787,0.6299999952316284,1.340000033378601,-0.10999999940395355,0,-0,0,-0,0,-0,-0,-0,-0],[0,0,-0,-0,0,-0,0,0,-0,1.309999942779541,0.5799999833106995,0.8799999952316284,0.4699999988079071,0.5400000214576721,0.25,-0,0,-0.10000000149011612,-0.12999999523162842,-0.3499999940395355,0.4000000059604645,0.18000000715255737,0.14000000059604645,0,0,-0.949999988079071,-0.9800000190734863,-0.4000000059604645,0.47999998927116394,-0.3700000047683716,0,0,-0,-0.25999999046325684,-0.6399999856948853,0.10000000149011612,0.1599999964237213,0.27000001072883606,0.019999999552965164,-0,-0,0.03999999910593033,0.20999999344348907,-0.30000001192092896,0.550000011920929,-0.12999999523162842,-0.10000000149011612,0,0,0.49000000953674316,0.05999999865889549,-0.33000001311302185,-0.10000000149011612,-0.5600000023841858,-0.10000000149011612,-0,0,0,-0,-0,0,-0,0,-0],[-0,0,0,-0,0,0,-0,-0,0,0.6000000238418579,-0.20000000298023224,0.019999999552965164,-0.4399999976158142,-0.800000011920929,0.5199999809265137,0,-0,-0.5099999904632568,-0.15000000596046448,0.15000000596046448,0.5199999809265137,0.20000000298023224,0.5699999928474426,-0,-0,-0.33000001311302185,-0.9399999976158142,-0.8299999833106995,0.2800000011920929,-0.09000000357627869,0.18000000715255737,-0,-0,0.5899999737739563,0.23999999463558197,0.6600000262260437,0.23999999463558197,-1.3799999952316284,0.17000000178813934,0,-0,0.6399999856948853,0.8999999761581421,0.6800000071525574,0.7300000190734863,0.2800000011920929,0.20999999344348907,0,-0,0.28999999165534973,-0.44999998807907104,-0.6100000143051147,-0.7599999904632568,-0.2800000011920929,0.10999999940395355,0,0,0,-0,-0,-0,-0,0,-0],[0,-0,-0,-0,0,-0,0,0,0,0.3499999940395355,0.8600000143051147,0.6700000166893005,0.10000000149011612,0.5,0.15000000596046448,0,-0,0.25999999046325684,-0.14000000059604645,-0.3100000023841858,0.07999999821186066,0.9300000071525574,-0.18000000715255737,0,-0,-0.05999999865889549,0.47999998927116394,0.3100000023841858,0.3400000035762787,-0.12999999523162842,-0.03999999910593033,0,0,-0.5899999737739563,0.17000000178813934,0.25,0.41999998688697815,0.6800000071525574,0.2800000011920929,-0,0,-0.019999999552965164,-0.07000000029802322,-0.8600000143051147,-0.5600000023841858,0.4300000071525574,-0.23000000417232513,-0,-0,0.28999999165534973,-0.28999999165534973,-0.17000000178813934,-0.14000000059604645,-0.3499999940395355,-0.07000000029802322,0,-0,0,0,0,-0,0,-0,-0],[0,0,0,-0,0,0,-0,0,-0,0.7200000286102295,0.8500000238418579,0.800000011920929,0.44999998807907104,0.4699999988079071,0.05999999865889549,0,-0,0.029999999329447746,-0,0.07000000029802322,0.1899999976158142,0.6200000047683716,-0.20999999344348907,-0,-0,-0.1599999964237213,0.03999999910593033,0.20999999344348907,0.36000001430511475,0.6899999976158142,-0.009999999776482582,0,-0,-0.28999999165534973,0.1599999964237213,0.5899999737739563,-0.03999999910593033,0.17000000178813934,-0.029999999329447746,-0,-0,0.5,-0,-0.3100000023841858,-0.12999999523162842,0.49000000953674316,-0.009999999776482582,0,0,-0.5099999904632568,-0.30000001192092896,0.27000001072883606,-0.07000000029802322,-0.17000000178813934,0.019999999552965164,0,-0,0,-0,-0,-0,0,0,-0],[0,-0,-0,-0,-0,-0,0,0,0,0.9599999785423279,0.25,0.6200000047683716,0.550000011920929,-0.07000000029802322,-0.05999999865889549,-0,-0,0.20999999344348907,0.2199999988079071,-0.029999999329447746,0.3199999928474426,-0.05000000074505806,-0.17000000178813934,0,0,-0.27000001072883606,0.3199999928474426,-0.5699999928474426,-0.05000000074505806,-0.3100000023841858,-0.36000001430511475,0,-0,-0.7300000190734863,-0.25,-0.44999998807907104,-0.28999999165534973,0.8899999856948853,-0.11999999731779099,-0,-0,-0.029999999329447746,0.4300000071525574,-0.7200000286102295,-0.3400000035762787,1.1100000143051147,0.20000000298023224,-0,0,0.8399999737739563,0.49000000953674316,1.0399999618530273,0.23999999463558197,-0.9800000190734863,0.05000000074505806,0,0,-0,0,0,0,-0,0,-0],[0,0,0,-0,0,-0,-0,-0,0,0.27000001072883606,0.49000000953674316,0.5699999928474426,-0.10000000149011612,-1.0800000429153442,-0,-0,0,0.4399999976158142,0.14000000059604645,-0.6399999856948853,0.5,-0.8399999737739563,0.019999999552965164,-0,0,-0.009999999776482582,-0.10000000149011612,-0.7200000286102295,-0.03999999910593033,-0.550000011920929,0.10000000149011612,-0,-0,-0.30000001192092896,-0.019999999552965164,0.25,0.5199999809265137,0.7200000286102295,0.3100000023841858,-0,-0,-0.5299999713897705,-0.029999999329447746,-0.6899999976158142,-0.4099999964237213,0.8500000238418579,0.23000000417232513,0,-0,0.09000000357627869,0.3700000047683716,0.5400000214576721,0.20000000298023224,0.019999999552965164,0.25999999046325684,0,-0,-0,-0,-0,0,0,-0,-0],[-0,0,0,0,0,-0,-0,0,0,0.49000000953674316,0.9800000190734863,0.09000000357627869,-0.6899999976158142,-0.12999999523162842,0.18000000715255737,0,0,-1.9299999475479126,-1.9199999570846558,-0.44999998807907104,0.15000000596046448,0.07999999821186066,-0.1899999976158142,0,0,-0.7599999904632568,0.7699999809265137,1.3700000047683716,-0.3499999940395355,-0.03999999910593033,-0.699999988079071,-0,0,-0.6700000166893005,1.0399999618530273,0.30000001192092896,0.17000000178813934,0.9700000286102295,-0.30000001192092896,-0,0,-0.9700000286102295,-1.149999976158142,0.6499999761581421,0.1899999976158142,-0.41999998688697815,-0.28999999165534973,0,0,-0.3499999940395355,0.17000000178813934,0.41999998688697815,-0.019999999552965164,0.15000000596046448,-0.23000000417232513,-0,-0,-0,-0,-0,-0,0,-0,-0],[0,0,0,-0,0,0,0,0,0,0.7400000095367432,0.7099999785423279,0.7699999809265137,0.6299999952316284,-0.009999999776482582,0.14000000059604645,-0,0,0.4699999988079071,0.019999999552965164,0.699999988079071,0.029999999329447746,0.46000000834465027,-0.15000000596046448,-0,0,0.10999999940395355,0.46000000834465027,0.11999999731779099,0.4300000071525574,-0.09000000357627869,-0.09000000357627869,-0,-0,-0.8299999833106995,-0.03999999910593033,0.49000000953674316,-0.1899999976158142,-0.7099999785423279,-0.07000000029802322,0,-0,0.2199999988079071,-0.8299999833106995,-0.800000011920929,-0.25,0.4099999964237213,-0.019999999552965164,-0,-0,0.23000000417232513,-0.1899999976158142,-0.15000000596046448,0.14000000059604645,-0.009999999776482582,-0.029999999329447746,0,-0,0,0,-0,-0,0,-0,-0],[0,0,-0,-0,0,-0,0,0,-0,-0.6499999761581421,0.5699999928474426,0.9200000166893005,0.4000000059604645,0.30000001192092896,-0.09000000357627869,-0,-0,0.8100000023841858,0.75,0.25,0.5799999833106995,0.5600000023841858,0.17000000178813934,-0,0,0.5699999928474426,-1.2300000190734863,0.009999999776482582,0.9300000071525574,0.029999999329447746,0.1899999976158142,0,-0,-0.3799999952316284,-0.7300000190734863,0.4099999964237213,1.159999966621399,0.6800000071525574,0.5,-0,-0,-1.6799999475479126,-0.5199999809265137,-0.949999988079071,0.11999999731779099,0.07999999821186066,-0.27000001072883606,-0,-0,-1.059999942779541,-1.1399999856948853,-0.5,-0.8199999928474426,-0.4399999976158142,-0.15000000596046448,0,-0,0,0,0,-0,-0,0,-0],[-0,-0,0,0,0,-0,-0,0,0,0.699999988079071,0.8299999833106995,0.05999999865889549,-0.9800000190734863,-0.38999998569488525,0.8299999833106995,0,0,0.009999999776482582,0.8100000023841858,-0.05999999865889549,1.3600000143051147,0.18000000715255737,0.33000001311302185,-0,0,-0.20999999344348907,1.4500000476837158,0.029999999329447746,0.75,1.0700000524520874,0.11999999731779099,0,-0,-0.30000001192092896,-0.8299999833106995,-0.05000000074505806,0.28999999165534973,-0.7599999904632568,-0.20000000298023224,0,0,0.30000001192092896,-0.029999999329447746,-0.7300000190734863,-0.949999988079071,-0.6399999856948853,-0.3400000035762787,-0,-0,-0.3499999940395355,-0.009999999776482582,-0.20000000298023224,-1.0199999809265137,-0.49000000953674316,-0.23000000417232513,-0,-0,0,-0,-0,-0,0,-0,0],[0,0,0,-0,0,-0,0,-0,0,0,-0,-0,0,0,-0,0,0,-0,-0,0,-0,-0,0,-0,-0,0,0,-0,-0,0,-0,-0,-0,0,0,-0,0,-0,0,-0,0,0,-0,0,0,-0,-0,0,-0,0,-0,-0,-0,0,0,-0,-0,-0,0,0,0,0,0,0],[-0,-0,0,-0,0,0,-0,0,-0,-1.4199999570846558,-0.7799999713897705,-0.3400000035762787,0.5799999833106995,0.8500000238418579,0.3400000035762787,0,0,-0.23000000417232513,0.7200000286102295,0.5699999928474426,-0.029999999329447746,-0.029999999329447746,0.5799999833106995,-0,-0,0.8700000047683716,0.3199999928474426,-1.0800000429153442,-1.1100000143051147,-2.5899999141693115,-0.4099999964237213,-0,-0,-1.2799999713897705,-0.41999998688697815,-0.5799999833106995,0.7200000286102295,1.0499999523162842,-0.11999999731779099,-0,-0,0.23000000417232513,0.5400000214576721,0.5799999833106995,0.7400000095367432,0.9200000166893005,-0.009999999776482582,0,-0,0.20000000298023224,-0.10999999940395355,0.07999999821186066,-0.23999999463558197,-0.20000000298023224,-0.029999999329447746,-0,-0,-0,-0,0,0,-0,-0,0],[-0,-0,0,0,0,0,0,0,0,0.46000000834465027,0.8700000047683716,0.3499999940395355,0,0.4300000071525574,0.15000000596046448,-0,0,0.8899999856948853,1.309999942779541,-0.3100000023841858,0.009999999776482582,0.46000000834465027,0.23999999463558197,-0,0,0.3700000047683716,0.6600000262260437,0.699999988079071,0.47999998927116394,-0.49000000953674316,-0.20999999344348907,-0,-0,-0.8999999761581421,-0.5899999737739563,0.7099999785423279,-0.6600000262260437,-1.1200000047683716,-0.3400000035762787,-0,0,-1.6799999475479126,-1.100000023841858,-1.2400000095367432,-0.7799999713897705,0.20999999344348907,-0.05000000074505806,-0,-0,0.5,0.6600000262260437,0.5,0.10000000149011612,-0.4300000071525574,-0.20000000298023224,0,-0,-0,-0,-0,-0,-0,0,0],[-0,-0,0,-0,0,-0,-0,0,-0,-0.49000000953674316,-0.019999999552965164,0.009999999776482582,-0.3799999952316284,-0.6499999761581421,-0.3499999940395355,0,0,-0.44999998807907104,0.07000000029802322,-0.2800000011920929,-0.1899999976158142,-0.17000000178813934,-0.27000001072883606,-0,-0,-0.15000000596046448,-0.029999999329447746,-0.3700000047683716,0.10000000149011612,1.159999966621399,0.09000000357627869,-0,0,0.27000001072883606,0.5699999928474426,0.4099999964237213,0.6000000238418579,1.2699999809265137,-0.07999999821186066,0,0,0.44999998807907104,0.699999988079071,0.6299999952316284,0.20000000298023224,0.699999988079071,0.09000000357627869,-0,-0,-1.7200000286102295,-0.44999998807907104,-0.07999999821186066,-0.11999999731779099,-0.5600000023841858,0.10000000149011612,-0,-0,0,0,-0,-0,0,0,0],[0,0,-0,0,-0,-0,0,-0,-0,0.4399999976158142,0.3799999952316284,-0.019999999552965164,-0.05999999865889549,0.5600000023841858,0.09000000357627869,-0,0,0.25999999046325684,-0.4099999964237213,0.5600000023841858,-0.25,-0.03999999910593033,0,0,-0,0.550000011920929,0.7599999904632568,0.5299999713897705,0.46000000834465027,-0.20999999344348907,-0.4399999976158142,0,0,-0.4699999988079071,-0.3799999952316284,-0.6700000166893005,0.47999998927116394,0.36000001430511475,-0.18000000715255737,-0,0,-0.3400000035762787,0.36000001430511475,0.7099999785423279,0.38999998569488525,-1.4600000381469727,-0.25999999046325684,0,0,0.5799999833106995,0.15000000596046448,-0.47999998927116394,-0.6299999952316284,-0.7200000286102295,-0.3400000035762787,-0,0,-0,-0,0,0,-0,-0,-0],[-0,-0,-0,-0,-0,0,0,0,0,0.5099999904632568,0.36000001430511475,0.20999999344348907,0.12999999523162842,0.75,0.2800000011920929,-0,0,0.3700000047683716,-0.03999999910593033,0.6399999856948853,0.7699999809265137,-0.550000011920929,0.4399999976158142,-0,-0,0.5799999833106995,0.3199999928474426,-0.5099999904632568,0.6499999761581421,0.18000000715255737,-0.1899999976158142,0,0,0.6299999952316284,0.7300000190734863,0.14000000059604645,1.2400000095367432,0.20000000298023224,-0.3499999940395355,-0,0,0.4399999976158142,0.8100000023841858,0.09000000357627869,-0.20000000298023224,-1.2999999523162842,-0.3199999928474426,-0,-0,-1.399999976158142,-1.6100000143051147,-1.3600000143051147,-0.7699999809265137,-0.5400000214576721,-0.30000001192092896,-0,-0,-0,0,0,0,0,0,0],[-0,-0,0,0,0,-0,-0,0,0,0.12999999523162842,0.5400000214576721,-0.6800000071525574,0.019999999552965164,1.090000033378601,-0.46000000834465027,-0,0,-0.07000000029802322,-0.14000000059604645,0.5099999904632568,0.8299999833106995,0.8999999761581421,-0.3400000035762787,-0,-0,0.14000000059604645,-0.41999998688697815,0.09000000357627869,-0.14000000059604645,-0.8299999833106995,-0.1599999964237213,-0,0,-0.8199999928474426,-1.2999999523162842,0.28999999165534973,0.8899999856948853,-0.1599999964237213,-0.3499999940395355,0,-0,-1.340000033378601,-1.7599999904632568,1.590000033378601,0.6100000143051147,-0.4000000059604645,0.28999999165534973,0,0,-1.6699999570846558,-0.9900000095367432,-0.5199999809265137,-0.23999999463558197,0.7200000286102295,0.2199999988079071,-0,-0,0,0,0,0,-0,0,0],[0,0,-0,0,-0,-0,0,0,-0,0.18000000715255737,0.3499999940395355,-0.23000000417232513,0.05999999865889549,0.5299999713897705,0.009999999776482582,0,0,-0.550000011920929,0.009999999776482582,0.17000000178813934,-0.14000000059604645,-0.2800000011920929,-0.11999999731779099,-0,-0,0.14000000059604645,0.25,-0.38999998569488525,-0.20000000298023224,0.7799999713897705,-0.09000000357627869,0,-0,0.12999999523162842,0.3400000035762787,-0.33000001311302185,-0.20999999344348907,0.6499999761581421,-0.18000000715255737,0,0,0.3700000047683716,0.8100000023841858,0.7900000214576721,0.17000000178813934,-0.20000000298023224,0.05999999865889549,-0,0,-0.5899999737739563,0.11999999731779099,0.14000000059604645,0.11999999731779099,0.14000000059604645,0.019999999552965164,-0,-0,-0,-0,0,-0,0,-0,0],[-0,-0,-0,0,-0,-0,0,-0,0,-0.8100000023841858,-0.28999999165534973,-0.30000001192092896,-0.10000000149011612,0.23999999463558197,0.4000000059604645,0,-0,-0.12999999523162842,-0.8399999737739563,1.4500000476837158,0.5799999833106995,0.2800000011920929,0.10000000149011612,0,-0,0.09000000357627869,-0.10000000149011612,1.309999942779541,0.6499999761581421,0.20999999344348907,-0.23999999463558197,-0,0,-0.7400000095367432,-0.10000000149011612,-0.2199999988079071,0.28999999165534973,0.23999999463558197,-0.11999999731779099,-0,-0,-0.15000000596046448,-0.25,-1.0499999523162842,-0.6100000143051147,-0.18000000715255737,-0.09000000357627869,0,-0,-0.6299999952316284,0.3400000035762787,0.20000000298023224,0.09000000357627869,0.10999999940395355,-0.009999999776482582,-0,-0,0,-0,-0,-0,0,0,-0],[-0,-0,-0,0,-0,-0,0,0,0,-0.44999998807907104,-0.550000011920929,-0.5899999737739563,-0.1899999976158142,-0.12999999523162842,-0.05000000074505806,-0,-0,0.6100000143051147,0.3499999940395355,-0.019999999552965164,-0.5299999713897705,0.03999999910593033,-0.05000000074505806,-0,0,0.3499999940395355,0.5199999809265137,0.7799999713897705,-0.05000000074505806,-0.05999999865889549,0.12999999523162842,-0,-0,0.27000001072883606,0.33000001311302185,0.25,0.10000000149011612,-0.3700000047683716,0.05999999865889549,0,0,0.6299999952316284,0.23000000417232513,0.4300000071525574,0.11999999731779099,0.18000000715255737,0.2199999988079071,0,0,-0.4699999988079071,-0.07000000029802322,-0.15000000596046448,0.4699999988079071,0.8199999928474426,0.25,0,-0,-0,-0,-0,-0,0,0,0],[0,0,-0,-0,-0,0,-0,0,-0,-0.5199999809265137,-0.7099999785423279,-0.5,0.3199999928474426,0.17000000178813934,0.11999999731779099,-0,0,0.2800000011920929,0.23999999463558197,0.2199999988079071,0.05000000074505806,0.10000000149011612,0.03999999910593033,-0,-0,0.05999999865889549,0.5,0.7400000095367432,0.10999999940395355,-0.800000011920929,0.03999999910593033,-0,-0,-0.30000001192092896,-0.12999999523162842,0.2800000011920929,0.23999999463558197,-0.4300000071525574,0.07999999821186066,-0,0,-0.05999999865889549,-0.1599999964237213,-0.4000000059604645,-0.4399999976158142,0.10999999940395355,-0.029999999329447746,0,-0,0.11999999731779099,0.41999998688697815,0.6800000071525574,0.949999988079071,1.4500000476837158,0.05000000074505806,0,-0,-0,0,0,-0,-0,0,0],[-0,-0,-0,-0,0,-0,0,-0,0,-0.46000000834465027,-0.5,-0.4300000071525574,-0.23999999463558197,-0.3700000047683716,-0.3100000023841858,-0,-0,0.25999999046325684,-0.019999999552965164,-0.3499999940395355,0.3799999952316284,-0.10000000149011612,-0.1899999976158142,0,0,0.28999999165534973,-0.029999999329447746,0.7200000286102295,0.1599999964237213,0.1599999964237213,0.12999999523162842,-0,0,0.7400000095367432,0.44999998807907104,0.6600000262260437,0.8700000047683716,-0.11999999731779099,-0.029999999329447746,0,-0,0.5600000023841858,-0,0.3199999928474426,0.3199999928474426,0.5799999833106995,-0.30000001192092896,-0,0,0.20999999344348907,-0.09000000357627869,-0.12999999523162842,-0.25,0.4399999976158142,-0.20999999344348907,0,-0,0,0,0,0,-0,0,-0],[-0,0,-0,0,-0,-0,-0,0,-0,-0.8899999856948853,-0.8100000023841858,-0.1899999976158142,-0.05000000074505806,-0.10000000149011612,0.20000000298023224,0,-0,-0.3100000023841858,0.4699999988079071,-0.4099999964237213,-0.800000011920929,0.23000000417232513,0.3499999940395355,-0,0,-0.25999999046325684,-0.23000000417232513,0.7400000095367432,1.2599999904632568,-0.20000000298023224,0.23999999463558197,0,-0,-1.100000023841858,-1.75,-0.07000000029802322,1.7300000190734863,0.7699999809265137,0.550000011920929,-0,-0,0.7699999809265137,1.0800000429153442,-1.0700000524520874,0.23000000417232513,0.7699999809265137,-0.3700000047683716,-0,0,-0.14000000059604645,-0.07000000029802322,-0.07000000029802322,0.38999998569488525,0.33000001311302185,-0.15000000596046448,-0,-0,0,-0,0,-0,-0,-0,-0],[0,-0,0,-0,0,0,-0,0,-0,-0.11999999731779099,0.41999998688697815,0.6600000262260437,0.2800000011920929,0.25,0.07000000029802322,-0,0,-0.20000000298023224,0.2199999988079071,-0.4099999964237213,-0.05000000074505806,0.7599999904632568,-0.07000000029802322,0,-0,-0.07000000029802322,-0.15000000596046448,-0.10999999940395355,0.1599999964237213,-0.3100000023841858,0.03999999910593033,-0,0,-0.05000000074505806,0.20000000298023224,0.27000001072883606,0.10999999940395355,0.8999999761581421,0.17000000178813934,-0,-0,0.30000001192092896,0.36000001430511475,-0.3700000047683716,0.27000001072883606,1,-0.019999999552965164,-0,0,-0.20999999344348907,-0.1599999964237213,0.36000001430511475,0.029999999329447746,0.03999999910593033,0.03999999910593033,-0,0,0,-0,0,-0,-0,-0,-0],[-0,-0,-0,-0,0,-0,-0,-0,-0,0.6499999761581421,0.5799999833106995,0.5600000023841858,0.49000000953674316,0.3799999952316284,0.18000000715255737,0,-0,0.17000000178813934,0.2800000011920929,0.550000011920929,0.07000000029802322,0.550000011920929,0.029999999329447746,-0,0,0.03999999910593033,-0.05999999865889549,-0.3100000023841858,-0.09000000357627869,-0.4099999964237213,-0.05000000074505806,-0,-0,-0.46000000834465027,-0.2800000011920929,-0.49000000953674316,-0.7400000095367432,-0.25999999046325684,0.009999999776482582,0,0,-0.019999999552965164,-0.3400000035762787,0.009999999776482582,0.49000000953674316,-0.029999999329447746,0.1899999976158142,-0,-0,-0.20999999344348907,0.49000000953674316,0.6399999856948853,0.6800000071525574,0.05999999865889549,0.14000000059604645,0,0,0,-0,0,-0,-0,0,0],[0,0,-0,-0,0,-0,-0,-0,-0,-1.159999966621399,-0.550000011920929,0.15000000596046448,1.2699999809265137,1.5800000429153442,-0.5299999713897705,-0,-0,1.2300000190734863,0.4699999988079071,-1.0099999904632568,1.9500000476837158,1.5299999713897705,0.019999999552965164,0,0,-0.1599999964237213,0.10999999940395355,-0.7300000190734863,-0.1899999976158142,1.2899999618530273,0.30000001192092896,0,-0,-0.5699999928474426,-0.18000000715255737,0.4399999976158142,0.11999999731779099,-0.10999999940395355,0.3400000035762787,-0,0,-0.11999999731779099,-0.15000000596046448,-0.47999998927116394,-0.8100000023841858,-0.029999999329447746,0,-0,0,0.25999999046325684,-0.44999998807907104,-0.25,-0.4300000071525574,-0.11999999731779099,-0.11999999731779099,0,0,-0,0,-0,-0,0,0,-0],[-0,-0,-0,0,0,0,-0,0,0,-0.2199999988079071,-0.10999999940395355,-0.029999999329447746,-0.25999999046325684,-0.11999999731779099,-0.05999999865889549,-0,-0,-0.17000000178813934,-0.3799999952316284,0.5099999904632568,0.2199999988079071,0.20000000298023224,-0.23999999463558197,-0,-0,0.18000000715255737,0.7400000095367432,0.8299999833106995,-0.11999999731779099,0.3700000047683716,-0.05999999865889549,-0,-0,-0.14000000059604645,0.20999999344348907,0.25999999046325684,0.4300000071525574,-0.07999999821186066,-0.009999999776482582,-0,-0,0.4099999964237213,-0.23000000417232513,0.10000000149011612,0.4699999988079071,-0.20999999344348907,-0.1599999964237213,-0,0,-0.33000001311302185,0,-0.15000000596046448,-0.18000000715255737,-0.2199999988079071,-0.11999999731779099,0,-0,-0,0,0,0,0,-0,0],[0,-0,0,0,0,-0,-0,0,-0,-0.20999999344348907,-0.33000001311302185,0.25999999046325684,-0.28999999165534973,-0.23000000417232513,-0.33000001311302185,0,-0,-0.4699999988079071,-0.7400000095367432,-0,1.0800000429153442,-0.5600000023841858,0.1599999964237213,0,0,-0.6399999856948853,-0.029999999329447746,-1.309999942779541,0.38999998569488525,0.7400000095367432,0.20000000298023224,-0,-0,-0.1899999976158142,-0.3400000035762787,-1.350000023841858,-0.5600000023841858,0.23999999463558197,-0.10000000149011612,-0,-0,1.409999966621399,1.3799999952316284,0.9700000286102295,0.4000000059604645,0.019999999552965164,0.11999999731779099,-0,0,0.44999998807907104,0.5699999928474426,0.9100000262260437,0.8500000238418579,0.8799999952316284,0.18000000715255737,0,-0,-0,-0,-0,-0,-0,0,-0],[-0,0,0,-0,0,-0,0,-0,0,1.9800000190734863,0.8199999928474426,0.029999999329447746,-0.1599999964237213,0.5400000214576721,0.4099999964237213,0,-0,-0.4699999988079071,-0.3199999928474426,0.3499999940395355,0.1599999964237213,-0.5299999713897705,0.09000000357627869,-0,0,-1.7200000286102295,-1.6799999475479126,0.41999998688697815,0.6200000047683716,0.46000000834465027,0.03999999910593033,-0,-0,-0.4699999988079071,0.9399999976158142,0.9399999976158142,-0.9900000095367432,-0.5699999928474426,-0.25,-0,0,-0.11999999731779099,1.9299999475479126,-0.2800000011920929,-1.2400000095367432,-0.029999999329447746,-0.3100000023841858,-0,-0,-0.3799999952316284,0.5299999713897705,0.3700000047683716,-0.03999999910593033,-0.9700000286102295,-0.41999998688697815,0,-0,-0,0,0,-0,-0,0,0],[-0,0,0,-0,0,0,-0,0,-0,0.6000000238418579,0.1599999964237213,0.25999999046325684,0.7900000214576721,-0.4399999976158142,-0.3799999952316284,-0,-0,0.5,-0.07999999821186066,1.059999942779541,-0.4699999988079071,-0.550000011920929,-0.25,0,-0,0.5600000023841858,-0.09000000357627869,0.8100000023841858,0.1599999964237213,-1.0099999904632568,-0.1599999964237213,-0,0,-0.20000000298023224,-0.6000000238418579,-0.28999999165534973,-0.3499999940395355,-1.4800000190734863,-0.03999999910593033,0,-0,-1.4299999475479126,-1.059999942779541,0.14000000059604645,0.3199999928474426,0,0.23000000417232513,-0,0,0.8799999952316284,1.4900000095367432,0.41999998688697815,0.20999999344348907,0.03999999910593033,-0,0,-0,-0,-0,-0,-0,0,-0,-0],[0,0,-0,0,-0,-0,0,0,-0,0.6700000166893005,0.20999999344348907,0.5099999904632568,0.8600000143051147,0.3499999940395355,0.25,0,-0,0.5600000023841858,0.10000000149011612,0.8100000023841858,-0.07000000029802322,0.20999999344348907,0.07999999821186066,0,-0,-0.12999999523162842,0.05999999865889549,0.15000000596046448,0.5600000023841858,-0.4399999976158142,-0.009999999776482582,0,-0,-0.20999999344348907,-0.27000001072883606,0.27000001072883606,-0.699999988079071,-1.0299999713897705,-0.1899999976158142,0,-0,0.6399999856948853,-0.8600000143051147,-0.49000000953674316,-0.009999999776482582,0.10999999940395355,0.019999999552965164,0,0,0.33000001311302185,-0.029999999329447746,0.07000000029802322,0.6800000071525574,0.8999999761581421,-0.019999999552965164,-0,-0,-0,-0,0,0,0,-0,0],[0,-0,0,-0,-0,-0,-0,0,0,0.4699999988079071,0.8100000023841858,0.5400000214576721,-0.47999998927116394,-1.190000057220459,0.05000000074505806,-0,0,-0.009999999776482582,0.6200000047683716,-0.2199999988079071,-0.03999999910593033,1.3700000047683716,-0.15000000596046448,-0,-0,-1.340000033378601,-0.6200000047683716,0.41999998688697815,0.46000000834465027,-0.4099999964237213,-0.10999999940395355,-0,0,-1.7899999618530273,-1.409999966621399,-0.8600000143051147,-0.8700000047683716,-1.0199999809265137,-0.25,-0,-0,0.9800000190734863,1.2699999809265137,-0.7400000095367432,-0.07999999821186066,1,0.4000000059604645,0,0,0.1599999964237213,0.6600000262260437,0.9800000190734863,0.7599999904632568,0.3799999952316284,0.18000000715255737,-0,-0,0,-0,-0,0,0,0,-0],[0,0,-0,-0,-0,-0,-0,-0,-0,0.3400000035762787,0.2199999988079071,0.5199999809265137,0.1599999964237213,0.44999998807907104,0.10999999940395355,-0,-0,0.5400000214576721,0.23999999463558197,-0.019999999552965164,0.6200000047683716,1.0199999809265137,0.019999999552965164,-0,-0,-0.05000000074505806,0.41999998688697815,0.30000001192092896,-0.4399999976158142,-0.5600000023841858,0.05000000074505806,0,-0,-0.05000000074505806,-0.30000001192092896,-0.5600000023841858,0.019999999552965164,0.25999999046325684,0.38999998569488525,0,-0,-0.07999999821186066,-0.2199999988079071,-0.7099999785423279,0.6200000047683716,0.7099999785423279,0.07000000029802322,-0,0,-0.07000000029802322,0.15000000596046448,0.3499999940395355,0.46000000834465027,0.07999999821186066,0.15000000596046448,-0,0,0,0,-0,0,-0,-0,-0],[-0,-0,-0,-0,0,-0,-0,0,-0,-0.1599999964237213,0.10000000149011612,1,0.8500000238418579,-0.009999999776482582,-0.3100000023841858,-0,-0,0.6499999761581421,-0.38999998569488525,-0.1899999976158142,0.9300000071525574,-0.18000000715255737,-0.14000000059604645,0,-0,-0.3100000023841858,-0.7799999713897705,-0.550000011920929,0.8899999856948853,1.1799999475479126,0.18000000715255737,-0,0,-0.009999999776482582,-0.019999999552965164,0.1599999964237213,0.28999999165534973,-1.4299999475479126,-0.11999999731779099,0,-0,0.36000001430511475,-0.9100000262260437,-0.5,-0.17000000178813934,-0.5,0.27000001072883606,-0,-0,-0.23999999463558197,0.5,-0.20000000298023224,0.23000000417232513,0.2199999988079071,0.23999999463558197,0,-0,0,0,-0,-0,0,0,0],[-0,-0,-0,0,-0,0,0,-0,-0,-2.140000104904175,0.14000000059604645,-0.12999999523162842,-0.28999999165534973,-0.05999999865889549,0.18000000715255737,0,0,-1.5499999523162842,-0.10999999940395355,0.5799999833106995,-0.07999999821186066,-0.3100000023841858,-0.27000001072883606,0,-0,-1.7200000286102295,0.03999999910593033,0.8799999952316284,-0.03999999910593033,0.3199999928474426,-0.10000000149011612,0,0,-0.10999999940395355,-0.029999999329447746,0.5,0.6399999856948853,0.15000000596046448,-0.18000000715255737,-0,-0,0.8700000047683716,-0.11999999731779099,0.9300000071525574,0.3400000035762787,-0.49000000953674316,-0.3700000047683716,-0,-0,-0.8899999856948853,-1.0199999809265137,-0.699999988079071,-0.11999999731779099,0.5400000214576721,-0.20000000298023224,0,0,-0,0,0,-0,0,-0,-0],[0,-0,0,-0,-0,0,-0,0,-0,-0.23999999463558197,-0.12999999523162842,-0.4099999964237213,0.11999999731779099,0.23999999463558197,-0.10999999940395355,0,0,0.05999999865889549,0.3400000035762787,-0.2199999988079071,0.15000000596046448,0.27000001072883606,-0.029999999329447746,0,-0,0.07999999821186066,-0.4300000071525574,0.14000000059604645,0.15000000596046448,-0.25,0.11999999731779099,0,-0,0.3400000035762787,0.23999999463558197,-0.05000000074505806,-0.10000000149011612,-0.05999999865889549,-0.029999999329447746,0,-0,0.5899999737739563,0.3400000035762787,0.1599999964237213,0.36000001430511475,0.7900000214576721,0.12999999523162842,-0,-0,-0.550000011920929,0.1899999976158142,0.27000001072883606,0.6600000262260437,0.8899999856948853,0.14000000059604645,0,0,-0,-0,0,0,0,-0,-0],[0,0,0,0,0,0,-0,0,-0,-0.3400000035762787,-0.07999999821186066,-0.28999999165534973,-0.38999998569488525,0.4699999988079071,-0.2199999988079071,0,0,0.019999999552965164,-0.07000000029802322,-0.23000000417232513,-0.38999998569488525,0.2800000011920929,-0.20999999344348907,-0,0,0,0.36000001430511475,-0.10999999940395355,0.10000000149011612,0.8700000047683716,-0.11999999731779099,0,-0,-0.05000000074505806,0.3400000035762787,-0.5799999833106995,0.25,1.0499999523162842,-0.27000001072883606,-0,-0,0.10999999940395355,-1.149999976158142,0.7099999785423279,1.9800000190734863,-0.12999999523162842,0.44999998807907104,0,-0,-0.3400000035762787,-0.6399999856948853,-0.09000000357627869,0.27000001072883606,-0.09000000357627869,0.20999999344348907,0,0,-0,0,0,-0,-0,-0,-0],[-0,0,0,-0,0,-0,0,0,0,-0.10999999940395355,0.23999999463558197,0.14000000059604645,-1.190000057220459,-2.619999885559082,0,0,-0,-0.4000000059604645,-0.2199999988079071,0.9200000166893005,0.6700000166893005,-3.7799999713897705,0.05000000074505806,0,0,0.6499999761581421,-0.07000000029802322,0.20999999344348907,-0.03999999910593033,-0.7599999904632568,0.15000000596046448,-0,0,0.4000000059604645,0.550000011920929,0.23000000417232513,-0.18000000715255737,0.18000000715255737,0.14000000059604645,-0,-0,1.0099999904632568,-0.029999999329447746,0.9900000095367432,0.6200000047683716,0.27000001072883606,0.27000001072883606,0,0,-0.6100000143051147,-0.05000000074505806,0.5099999904632568,-0.20999999344348907,0.019999999552965164,0.33000001311302185,-0,0,-0,-0,0,0,-0,-0,0],[-0,0,0,0,-0,0,-0,-0,0,-0.10000000149011612,0.7799999713897705,0.5600000023841858,-0.47999998927116394,0.15000000596046448,-0,0,0,-0.75,0.4300000071525574,-0.23999999463558197,-0.2800000011920929,-0.3199999928474426,-0.3400000035762787,-0,-0,0.1899999976158142,1.2100000381469727,-0.09000000357627869,-0.3199999928474426,0.4399999976158142,-0.12999999523162842,0,0,0.25,0.44999998807907104,-0.11999999731779099,0.550000011920929,1.4199999570846558,0.18000000715255737,-0,-0,1.0700000524520874,0.47999998927116394,0.5,0.07999999821186066,-0.05999999865889549,-0.27000001072883606,-0,0,0.1899999976158142,-1.1200000047683716,-0.4000000059604645,-0.03999999910593033,-0.3199999928474426,-0.11999999731779099,0,-0,-0,0,-0,-0,-0,0,-0],[-0,0,0,-0,-0,-0,0,0,0,0.07999999821186066,-0.33000001311302185,0.8199999928474426,0.7599999904632568,0.3799999952316284,0.49000000953674316,0,-0,-0.20999999344348907,0.14000000059604645,-0.6499999761581421,-1.5199999809265137,-0.2800000011920929,0.2199999988079071,0,-0,0.18000000715255737,0.6299999952316284,-0.05999999865889549,-0.5099999904632568,-0.9399999976158142,-0.2199999988079071,-0,-0,-0.6200000047683716,0.8399999737739563,1.0700000524520874,-0.2199999988079071,0.3700000047683716,-0.1899999976158142,-0,-0,0.12999999523162842,1.5,0.8199999928474426,-1.1799999475479126,-0.019999999552965164,-0.20999999344348907,0,-0,0.5099999904632568,1.090000033378601,0.9300000071525574,0.05000000074505806,0.33000001311302185,-0.18000000715255737,0,0,-0,-0,-0,0,0,0,0],[0,-0,-0,-0,0,-0,-0,-0,-0,1.2400000095367432,1.059999942779541,0.25999999046325684,-0.1899999976158142,-0.5299999713897705,0.009999999776482582,0,-0,0.4099999964237213,1.2400000095367432,1.809999942779541,-0.05999999865889549,-0.9200000166893005,-0.05000000074505806,-0,0,-0.5400000214576721,-0.25999999046325684,-0.75,-0.03999999910593033,-0.23000000417232513,-0.27000001072883606,-0,0,-1.0299999713897705,-0.25,-0.25999999046325684,-0.75,-0.2199999988079071,-0.4000000059604645,0,0,-1.4800000190734863,-0.03999999910593033,0.10000000149011612,0.30000001192092896,0.6000000238418579,0.28999999165534973,-0,0,-0.2199999988079071,0.019999999552965164,0.44999998807907104,0.23000000417232513,-0.49000000953674316,0.019999999552965164,0,0,0,0,-0,-0,0,0,-0],[-0,0,0,-0,0,-0,-0,-0,-0,-0.8299999833106995,-0.6600000262260437,0.019999999552965164,-0.05999999865889549,-0.009999999776482582,0.05000000074505806,0,-0,0.019999999552965164,0.5,-0.6600000262260437,-0.9900000095367432,0.6399999856948853,0.3100000023841858,0,-0,-0.27000001072883606,-0.03999999910593033,0.4399999976158142,-0.8700000047683716,-0.3100000023841858,0.07000000029802322,-0,-0,-0.28999999165534973,0.25,0.5099999904632568,-0.3700000047683716,-0.9700000286102295,-0.10000000149011612,0,-0,0.8899999856948853,0.5199999809265137,0.6100000143051147,-0.6899999976158142,-0.6600000262260437,-0.07000000029802322,-0,-0,1.0099999904632568,0.4300000071525574,1.1799999475479126,1.8600000143051147,0.10999999940395355,-0.05999999865889549,-0,-0,0,0,-0,-0,-0,-0,0],[0,-0,-0,-0,-0,-0,0,0,0,-0.15000000596046448,0.11999999731779099,0.8199999928474426,0.4099999964237213,-0.029999999329447746,0.47999998927116394,-0,0,1.059999942779541,0.029999999329447746,-0.7200000286102295,0.2199999988079071,0.18000000715255737,0.44999998807907104,0,-0,0.009999999776482582,-1.5399999618530273,-1.1299999952316284,-0.2199999988079071,-0.5600000023841858,-0.12999999523162842,0,-0,0.6700000166893005,-0.9800000190734863,1.2599999904632568,0.2800000011920929,-0.5600000023841858,0.14000000059604645,-0,0,0.7799999713897705,0.23000000417232513,0.1599999964237213,-0.009999999776482582,0.5299999713897705,0.3499999940395355,-0,0,0.38999998569488525,-0.5299999713897705,-0.11999999731779099,0.009999999776482582,0.17000000178813934,0.23000000417232513,-0,0,-0,0,0,0,0,-0,-0],[-0,-0,0,-0,0,0,-0,-0,-0,0.07999999821186066,0.18000000715255737,0.25,0.5799999833106995,0.6299999952316284,0.5199999809265137,-0,-0,-0.14000000059604645,-0.25,0.7200000286102295,-0.05000000074505806,-0.10000000149011612,0.27000001072883606,-0,0,0.23000000417232513,-0.20000000298023224,1.2799999713897705,0.9100000262260437,-0.6200000047683716,-0.09000000357627869,-0,-0,-0.20000000298023224,-0.7099999785423279,-0.3700000047683716,0.9700000286102295,0.5600000023841858,0.10999999940395355,-0,-0,0.17000000178813934,0.029999999329447746,-0.8899999856948853,-0.6299999952316284,0.05000000074505806,-0.4399999976158142,0,-0,-0.8999999761581421,-0.18000000715255737,0.009999999776482582,0.009999999776482582,0.03999999910593033,-0.3199999928474426,0,-0,-0,-0,0,0,-0,0,0],[0,-0,0,0,-0,-0,0,-0,-0,0.7900000214576721,1.25,0.7699999809265137,-0.2800000011920929,-0.5600000023841858,0.23000000417232513,0,-0,0.07000000029802322,-0.30000001192092896,-0.1899999976158142,1.1399999856948853,0.9100000262260437,0.7900000214576721,0,-0,-1.0399999618530273,0.800000011920929,0.07000000029802322,-1.2400000095367432,-0,0.28999999165534973,0,0,-0.75,0.6299999952316284,0.9300000071525574,-0.46000000834465027,-2.0999999046325684,0.14000000059604645,0,0,-0.7699999809265137,-1.4600000381469727,0.44999998807907104,0.8999999761581421,-1.340000033378601,0.18000000715255737,0,-0,0.47999998927116394,0.4699999988079071,-0.27000001072883606,-1.100000023841858,-0.800000011920929,0.20000000298023224,0,0,-0,-0,-0,-0,0,0,0]],[-0.15000000596046448,0.23000000417232513,0.2800000011920929,0.12999999523162842,-0.029999999329447746,-0.05999999865889549,0.11999999731779099,-0.019999999552965164,-0.10999999940395355,-0.3199999928474426,-0.4699999988079071,0.33000001311302185,0.23999999463558197,0.36000001430511475,0.18000000715255737,-0.4300000071525574,0.05999999865889549,0.09000000357627869,-0.019999999552965164,0.7699999809265137,1.059999942779541,-0,0.4399999976158142,-0.09000000357627869,0.4699999988079071,-0.550000011920929,0.10999999940395355,-0.3400000035762787,0.03999999910593033,-0.2199999988079071,0.12999999523162842,0.33000001311302185,0.4000000059604645,-0.18000000715255737,-0.4699999988079071,-0.17000000178813934,0.3499999940395355,-0.3799999952316284,-0.2199999988079071,-0.25999999046325684,0,-0.09000000357627869,0.5,0.11999999731779099,-0.23000000417232513,-0.019999999552965164,-0.5400000214576721,0.1599999964237213,-0.44999998807907104,0.14000000059604645,0.41999998688697815,0.17000000178813934,0.28999999165534973,0.30000001192092896,0.3499999940395355,0.05999999865889549,0.2800000011920929,-0.1599999964237213,-0.5,0.03999999910593033,-0.019999999552965164,0.7300000190734863,-0.6000000238418579,0.10999999940395355],[[-1.2400000095367432,-0.3700000047683716,-0.36000001430511475,0.25,0.9700000286102295,1.2100000381469727,-0.4099999964237213,-0.009999999776482582,0.47999998927116394,-0.25999999046325684,1.5,1.899999976158142,-0.3199999928474426,-0.5600000023841858,0.9700000286102295,-2.2100000381469727,0.41999998688697815,-2.6600000858306885,-2.319999933242798,-0.7099999785423279,-1.2100000381469727,0.009999999776482582,0.5099999904632568,0.9300000071525574,0.9399999976158142,2.619999885559082,-0.15000000596046448,-2.740000009536743,-0.07000000029802322,0,-0.20000000298023224,-2.190000057220459,0.7900000214576721,0.44999998807907104,0.4000000059604645,-0.949999988079071,0.7099999785423279,-0.6100000143051147,-0.3199999928474426,-0.4000000059604645,-0.5799999833106995,-3.9200000762939453,0.20000000298023224,0.949999988079071,-0.44999998807907104,0.36000001430511475,0.9800000190734863,-0.23999999463558197,-2.1700000762939453,-0.5799999833106995,-0.019999999552965164,0.6899999976158142,0.25,0.4000000059604645,-0.009999999776482582,-0.6399999856948853,0.3799999952316284,0.25999999046325684,-1.2000000476837158,1.2899999618530273,-0.3199999928474426,0.25999999046325684,-3.0399999618530273,-0.7799999713897705],[0.9399999976158142,-0.4000000059604645,-3.4600000381469727,2,-3.140000104904175,0.36000001430511475,0.5099999904632568,-3.25,1.1200000047683716,0.4399999976158142,0.7900000214576721,-2.0199999809265137,1.7000000476837158,-2.130000114440918,-4.650000095367432,2.2899999618530273,-0.5799999833106995,-0.14000000059604645,0.8799999952316284,-0.6200000047683716,-0.9900000095367432,-0.7599999904632568,-0.7699999809265137,0.33000001311302185,-0.9599999785423279,1.5499999523162842,-0.6899999976158142,1.850000023841858,0.019999999552965164,0,-1.9800000190734863,-1.9700000286102295,-1.1299999952316284,0.3400000035762787,2.059999942779541,1.6100000143051147,-0.07999999821186066,1.5199999809265137,0.36000001430511475,0.49000000953674316,-0.05999999865889549,0.029999999329447746,-1.090000033378601,-0.05999999865889549,1.9199999570846558,0.2199999988079071,0.05000000074505806,0.3700000047683716,2.109999895095825,-0.03999999910593033,-3.200000047683716,-0.25999999046325684,-0.019999999552965164,-0.2800000011920929,-0.10000000149011612,1,0.15000000596046448,-0.23000000417232513,1.6799999475479126,0.11999999731779099,1.1799999475479126,-1.5299999713897705,1.0399999618530273,-1.2899999618530273],[-1.7799999713897705,0.75,1.9700000286102295,-1.5499999523162842,-1.590000033378601,0.10000000149011612,0.10000000149011612,-1.7100000381469727,-1.5800000429153442,0.07000000029802322,0.5699999928474426,-0.009999999776482582,1.100000023841858,-1.309999942779541,-0.1599999964237213,-1.7200000286102295,-0.7900000214576721,-1.149999976158142,-0.33000001311302185,0.09000000357627869,0.8100000023841858,-1.440000057220459,-0.10000000149011612,1.1799999475479126,-0.009999999776482582,-2.4700000286102295,0.07999999821186066,-1.7300000190734863,-2.490000009536743,-0,0.25,0.8299999833106995,0.07000000029802322,-2.1600000858306885,0.8500000238418579,1.4199999570846558,0.25999999046325684,-1.2599999904632568,0.1599999964237213,-0.36000001430511475,-0.6899999976158142,-2.5799999237060547,-0.3100000023841858,0.6000000238418579,-0.18000000715255737,-0.8500000238418579,0.75,1.409999966621399,1.190000057220459,0.6100000143051147,1.7699999809265137,-0.7599999904632568,1.3600000143051147,0.27000001072883606,0.44999998807907104,1.7899999618530273,0.8100000023841858,-2.059999942779541,0.15000000596046448,1.7999999523162842,0.28999999165534973,0.8899999856948853,-1.7599999904632568,-4.789999961853027],[-1.190000057220459,0.12999999523162842,2.140000104904175,-0.3400000035762787,-0.8399999737739563,0.23999999463558197,0,-1.3899999856948853,1.2200000286102295,0.6200000047683716,0.41999998688697815,-2.2300000190734863,-5.300000190734863,2.2899999618530273,1.7200000286102295,0.9599999785423279,-0.5,-0.20000000298023224,0.7900000214576721,0.6200000047683716,0.5,0.18000000715255737,-0.27000001072883606,0.38999998569488525,0.9399999976158142,1.1299999952316284,0.029999999329447746,0.9300000071525574,-3.759999990463257,0,0.38999998569488525,0.5400000214576721,-0.7599999904632568,-0.23000000417232513,-2.5199999809265137,-1.4600000381469727,-0.8700000047683716,-1.2599999904632568,-0.41999998688697815,0.05000000074505806,0.029999999329447746,1.1100000143051147,0.49000000953674316,0.2199999988079071,1.5800000429153442,-0.699999988079071,0.11999999731779099,-0.6399999856948853,0.05999999865889549,-0.009999999776482582,0.4300000071525574,0.6200000047683716,0.3700000047683716,-2.630000114440918,0.029999999329447746,-0.6499999761581421,1.0700000524520874,-1.149999976158142,-2.6700000762939453,-0.30000001192092896,-0.7900000214576721,1.2200000286102295,-0.3400000035762787,2.569999933242798],[-1.9700000286102295,-0.699999988079071,-0.15000000596046448,-0.3400000035762787,-1.75,-2.740000009536743,-1.1699999570846558,1.0499999523162842,1.809999942779541,0.4099999964237213,0.6600000262260437,0.07000000029802322,0.07000000029802322,3.5299999713897705,-0.949999988079071,-0.2199999988079071,0.8100000023841858,2.5199999809265137,-0.5099999904632568,-0.8199999928474426,1.090000033378601,-1.0499999523162842,-0.7400000095367432,-3.3499999046325684,-2.7100000381469727,0.9100000262260437,-1.2799999713897705,0.4300000071525574,2.430000066757202,-0,2.0999999046325684,2.0999999046325684,0.9599999785423279,0.23000000417232513,1.2100000381469727,0.18000000715255737,0.2800000011920929,-0.4099999964237213,0.3499999940395355,-1.190000057220459,0.8600000143051147,0.07000000029802322,-0.41999998688697815,-1.309999942779541,-1.5399999618530273,0.46000000834465027,0.6800000071525574,-1.3899999856948853,-1.1200000047683716,-1.7799999713897705,2.240000009536743,-0.9800000190734863,-0.800000011920929,0.5899999737739563,-0.27000001072883606,1.3799999952316284,-0.23999999463558197,0.7900000214576721,-0.6399999856948853,-3.0399999618530273,0.3199999928474426,-2.809999942779541,-0.7099999785423279,0.38999998569488525],[3.509999990463257,-0.5099999904632568,-1.440000057220459,1.0099999904632568,1.9299999475479126,0.3499999940395355,0.12999999523162842,0.8700000047683716,-0.03999999910593033,-2.9100000858306885,1.7899999618530273,1.1200000047683716,0.20999999344348907,-0.12999999523162842,-0.1899999976158142,-0.25,-0.30000001192092896,-1.25,0.029999999329447746,-0.029999999329447746,1.3799999952316284,0.4099999964237213,-0.05000000074505806,0.3799999952316284,-0.5199999809265137,0.7200000286102295,0.3199999928474426,-1.0399999618530273,1.4600000381469727,0,1.399999976158142,0.6000000238418579,-1,1.1200000047683716,0.4399999976158142,0.20999999344348907,0.09000000357627869,1.0399999618530273,-0.25,-0.09000000357627869,-1.1699999570846558,-0.009999999776482582,0.25999999046325684,0.75,-4.269999980926514,-0,0.11999999731779099,-1.7400000095367432,0.1599999964237213,0.05000000074505806,1.1799999475479126,0.38999998569488525,-2.4200000762939453,0.4300000071525574,-0.6000000238418579,0.07999999821186066,-3.950000047683716,0.49000000953674316,0.6100000143051147,0.07000000029802322,0.30000001192092896,1.5499999523162842,0.9700000286102295,0.7599999904632568],[1.1299999952316284,-0.20999999344348907,0.699999988079071,0.7599999904632568,0.9599999785423279,-0.09000000357627869,0.46000000834465027,1,0.25,0.6800000071525574,-0.3799999952316284,-1.4600000381469727,-0.4699999988079071,0.05999999865889549,0.15000000596046448,0.10000000149011612,0.4699999988079071,-3.2899999618530273,1.159999966621399,-2.2799999713897705,-1.440000057220459,0.7599999904632568,-0.38999998569488525,0.12999999523162842,0.33000001311302185,0.550000011920929,-0.8899999856948853,-2.640000104904175,0.9300000071525574,0,1.559999942779541,-4.369999885559082,0.3199999928474426,0.699999988079071,-3.0899999141693115,1.1100000143051147,0.5,0.5699999928474426,0.3400000035762787,0.7599999904632568,0.2800000011920929,0.44999998807907104,0.3700000047683716,-0.5799999833106995,-2.3399999141693115,-0.7300000190734863,-0.8999999761581421,0.4399999976158142,-1.6699999570846558,-0.6100000143051147,-2.440000057220459,-0.6299999952316284,-1.7799999713897705,0.20000000298023224,0.5699999928474426,-0.18000000715255737,-0.8600000143051147,0.6600000262260437,1.1799999475479126,-1.090000033378601,0.7900000214576721,1.659999966621399,0.6200000047683716,0.5600000023841858],[-0.49000000953674316,-0.9900000095367432,-0.699999988079071,-0.7099999785423279,-4.619999885559082,-0.5099999904632568,0.17000000178813934,-1.0800000429153442,-0.029999999329447746,-1.7300000190734863,0.15000000596046448,0.550000011920929,-0.5299999713897705,-1.0199999809265137,0.009999999776482582,0.699999988079071,-0.8299999833106995,0.46000000834465027,-1.909999966621399,1.340000033378601,1.409999966621399,0.4699999988079071,0.5099999904632568,-0.23999999463558197,-0.7799999713897705,0.4699999988079071,-0.029999999329447746,0.25,0.14000000059604645,0,1.7100000381469727,-0.10999999940395355,0.41999998688697815,0.4000000059604645,0.8799999952316284,-0.25999999046325684,0.23999999463558197,-0.9200000166893005,-1.5800000429153442,-1.2400000095367432,-0.23000000417232513,-1.1799999475479126,0.3499999940395355,-0.5099999904632568,1.2000000476837158,-0.03999999910593033,-2.4000000953674316,1.5700000524520874,-0.8399999737739563,-0.5299999713897705,-1.9900000095367432,-0.5400000214576721,0.4699999988079071,0.7300000190734863,-0.8600000143051147,0.44999998807907104,0.2199999988079071,0.8999999761581421,-0.6499999761581421,1.5299999713897705,-4.630000114440918,0.9200000166893005,0.2199999988079071,-0.7900000214576721],[-2.930000066757202,0.2199999988079071,1.4600000381469727,-3.5199999809265137,2.309999942779541,-0.10999999940395355,0.5199999809265137,1.059999942779541,-2.8299999237060547,0.4399999976158142,-4.079999923706055,0.07000000029802322,1.840000033378601,-0.1899999976158142,0.7300000190734863,-0.019999999552965164,0.8700000047683716,-0.3199999928474426,0.09000000357627869,0.25999999046325684,-0.10000000149011612,0.4699999988079071,0.4099999964237213,-0.7200000286102295,-0.09000000357627869,-3.5299999713897705,0.029999999329447746,-0.019999999552965164,-0.1899999976158142,-0,-1.2899999618530273,-0.30000001192092896,0.36000001430511475,-1.6799999475479126,-2.5399999618530273,0.550000011920929,-0,-0.8799999952316284,0.6000000238418579,0.36000001430511475,0.6299999952316284,0.9300000071525574,0.75,0.1599999964237213,-1.940000057220459,0.3400000035762787,-4.179999828338623,1.100000023841858,-1.3700000047683716,0.23999999463558197,-0.23999999463558197,0.49000000953674316,-0.1599999964237213,0.3799999952316284,0.75,-1.8700000047683716,0.30000001192092896,0.25,0.17000000178813934,-1.4600000381469727,0.1599999964237213,-0.05999999865889549,-0.2199999988079071,-0.27000001072883606],[-0.05999999865889549,0.9100000262260437,-2.799999952316284,0.05999999865889549,1.5700000524520874,0.029999999329447746,-0.25999999046325684,1.090000033378601,-0.5699999928474426,0.6499999761581421,1.0700000524520874,1.0399999618530273,-0.25999999046325684,-6.090000152587891,0.23000000417232513,-1.7100000381469727,0.05000000074505806,0.9100000262260437,-0.20000000298023224,-0.4300000071525574,-2.240000009536743,0.47999998927116394,0.20999999344348907,0.009999999776482582,0.07000000029802322,-2.880000114440918,0.8100000023841858,0.03999999910593033,0.3400000035762787,0,-3.690000057220459,0.7599999904632568,-0.28999999165534973,0.9100000262260437,-0.6499999761581421,-2.809999942779541,-0.699999988079071,0.5600000023841858,0.25999999046325684,0.3700000047683716,0.30000001192092896,0.4300000071525574,-0.4300000071525574,-0.36000001430511475,1.4600000381469727,0.5799999833106995,3.0399999618530273,-2.880000114440918,0.6800000071525574,0.27000001072883606,0.6700000166893005,-0.30000001192092896,0.5199999809265137,-0.3700000047683716,-0.75,-1.1200000047683716,1.2699999809265137,-0.6800000071525574,-1.909999966621399,0.11999999731779099,-1.1200000047683716,-3.259999990463257,0.4300000071525574,0.4699999988079071]],[0.25999999046325684,-0.20999999344348907,0.3199999928474426,0.019999999552965164,0.2199999988079071,-0.4000000059604645,-0.07000000029802322,0.12999999523162842,0.44999998807907104,-0.009999999776482582]];
+/* Carton : une rangée de cases ; numéro de balise imprimé en haut à droite, réponse manuscrite au milieu.
+   1) Tesseract lit les petits numéros imprimés -> on en déduit la grille de cases (même si certains numéros sont manqués).
+   2) Chaque case est découpée, l'encre isolée, puis les chiffres sont reconnus par un petit réseau intégré à l'appli. */
+function findGrids(words){
+  const tk=words.map(w=>{const q=w.bbox;return{t:String(w.text).replace(/\D/g,''),x:(q.x0+q.x1)/2,y:(q.y0+q.y1)/2,h:q.y1-q.y0,c:w.confidence||0}}).filter(t=>t.t&&t.t.length<=2);
+  tk.forEach(t=>t.n=parseInt(t.t,10));
+  let pool=tk.filter(t=>t.c>=50&&t.n>=1&&t.n<=60);
+  const grids=[],sim=(a,b)=>Math.abs(a-b)<=.4*Math.max(a,b);
+  for(let r=0;r<3&&pool.length>=3;r++){
+    let best=null;
+    for(let i=0;i<pool.length;i++)for(let j=i+1;j<pool.length;j++){
+      const p=pool[i],q=pool[j];if(p.n===q.n||!sim(p.h,q.h))continue;
+      const dn=q.n-p.n,b=(q.x-p.x)/dn;if(!(b>p.h*3&&b<p.h*20))continue;
+      const sy=(q.y-p.y)/dn;
+      const inl=pool.filter(t=>sim(t.h,p.h)&&Math.abs(t.x-(p.x+b*(t.n-p.n)))<.2*b&&Math.abs(t.y-(p.y+sy*(t.n-p.n)))<.25*b);
+      if(!best||inl.length>best.length)best=inl;
+    }
+    if(!best||best.length<3)break;
+    const n=best.length,mv=best.reduce((q,t)=>q+t.n,0)/n,mx=best.reduce((q,t)=>q+t.x,0)/n,my=best.reduce((q,t)=>q+t.y,0)/n;
+    let sv=0,sx=0,sy=0;best.forEach(t=>{sv+=(t.n-mv)**2;sx+=(t.n-mv)*(t.x-mx);sy+=(t.n-mv)*(t.y-my)});
+    const ns=best.map(t=>t.n);
+    grids.push({n0:Math.min(...ns),n1:Math.max(...ns),mv,mx,my,bw:sx/sv,by:sy/sv});
+    pool=pool.filter(t=>!best.includes(t));
+  }
+  return grids;
+}
+function gridFromTaps(a,b,N){return {n0:1,n1:N,mv:1,mx:a.x,my:a.y,bw:(b.x-a.x)/(N-1),by:(b.y-a.y)/(N-1)}}
+/* Apprentissage : chiffres validés par l'enseignant (vecteur 8x8 quantifié 0-99 + vraie valeur) */
+const PDKEY='co-digits-v1';
+let PD=[];
+try{PD=JSON.parse(localStorage.getItem(PDKEY)||'[]').filter(x=>x&&x.v&&x.v.length===256&&x.d>=0&&x.d<=10)}catch(e){PD=[]}
+function savePD(){if(PD.length>2500)PD=PD.slice(PD.length-2500);try{localStorage.setItem(PDKEY,JSON.stringify(PD))}catch(e){}}
+function learnFrom(rows){
+  let n=0;
+  rows.forEach(r=>{
+    if(!r.dv||!r.dv.length)return;
+    if(r.v===''){r.dv.forEach(vec=>{PD.push({v:vec.map(x=>Math.round(x*99)),d:10});n++});r.dv=[];return} /* case vidée : ce n'était pas un chiffre */
+    if(!/^\d+$/.test(r.v||'')||r.v.length!==r.dv.length)return;
+    r.dv.forEach((vec,i)=>{PD.push({v:vec.map(x=>Math.round(x*99)),d:+r.v[i]});n++});
+    r.dv=[];
+  });
+  if(n)savePD();
+  return n;
+}
+const MINP=0.5;
+function normN(sub,w,h,N){
+  let y0=h,y1=-1,x0=w,x1=-1;
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(sub[y*w+x]>.25){if(y<y0)y0=y;if(y>y1)y1=y;if(x<x0)x0=x;if(x>x1)x1=x}
+  if(y1<0)return null;
+  const ch=y1-y0+1,cw=x1-x0+1,s=(N-2)/Math.max(ch,cw),nh=Math.max(1,Math.round(ch*s)),nw=Math.max(1,Math.round(cw*s));
+  const out=new Float32Array(N*N),oy=(N-nh)>>1,ox=(N-nw)>>1;let mx=0;
+  for(let i=0;i<nh;i++)for(let j=0;j<nw;j++){
+    const ya=y0+i*ch/nh,yb=y0+(i+1)*ch/nh,xa=x0+j*cw/nw,xb=x0+(j+1)*cw/nw;let sum=0,cnt=0;
+    for(let yy=Math.floor(ya);yy<Math.min(Math.ceil(yb),y1+1);yy++)for(let xx=Math.floor(xa);xx<Math.min(Math.ceil(xb),x1+1);xx++){sum+=sub[yy*w+xx];cnt++}
+    const v=cnt?sum/cnt:0;out[(oy+i)*N+ox+j]=v;if(v>mx)mx=v;
+  }
+  if(mx>0)for(let i=0;i<N*N;i++)out[i]/=mx;
+  return out;
+}
+const norm8=(sub,w,h)=>normN(sub,w,h,8);
+function classifyDigit(v,v16){
+  const [W1,b1,W2,b2]=DG;
+  const hd=W1.map((w,i)=>{let s=b1[i];for(let k=0;k<64;k++)s+=w[k]*v[k];return s>0?s:0});
+  const lg=W2.map((w,c)=>{let s=b2[c];for(let i=0;i<hd.length;i++)s+=w[i]*hd[i];return s});
+  const mx=Math.max(...lg),ex=lg.map(x=>Math.exp(x-mx)),sm=ex.reduce((p,q)=>p+q,0),pr=ex.map(x=>x/sm);
+  if(v16&&PD.length>=10){
+    const k=Math.min(7,PD.length),dl=[];
+    for(const q of PD){let d=0;for(let i=0;i<256;i++){const t=v16[i]-q.v[i]/99;d+=t*t}dl.push([d/4,q.d])}
+    dl.sort((a,b)=>a[0]-b[0]);
+    const pk=new Array(11).fill(.05);let tot=.55;pr.push(0);
+    dl.slice(0,k).forEach(([d,c])=>{const w=1/(d+.3);pk[c]+=w;tot+=w});
+    const w=Math.max(.9*PD.length/(PD.length+80),.97*Math.exp(-((dl[0][0]/.8)**2)));
+    for(let c=0;c<11;c++)pr[c]=(1-w)*pr[c]+w*pk[c]/tot;
+  }
+  const o=pr.map((p,i)=>i).sort((p,q)=>pr[q]-pr[p]);
+  if(o[0]===10)return {d:'',p:0,d2:''};
+  return {d:String(o[0]),p:pr[o[0]],d2:String(o[1]===10?o[2]:o[1])};
+}
+function readCell(P,p,bw){
+  const x0=Math.max(0,Math.round(p.x-.97*bw)),x1=Math.min(P.W,Math.round(p.x+.08*bw)),y0=Math.max(0,Math.round(p.y-.12*bw)),y1=Math.min(P.H,Math.round(p.y+.84*bw));
+  const w=x1-x0,h=y1-y0;if(w<20||h<20)return {lines:[],alts:[],dv:[],box:[x0,y0,w,h]};
+  /* Encre de n'importe quelle couleur : écart de couleur (R,V,B) par rapport au fond de la case */
+  const rr=new Float32Array(w*h),gg=new Float32Array(w*h),bb=new Float32Array(w*h);
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){const i=((y0+y)*P.W+x0+x)*4,j=y*w+x;rr[j]=P.col[i];gg[j]=P.col[i+1];bb[j]=P.col[i+2]}
+  const med=a=>Array.from(a).sort((p,q)=>p-q)[a.length>>1],mR=med(rr),mG=med(gg),mB=med(bb);
+  const gs=new Float32Array(w*h);
+  for(let j=0;j<w*h;j++)gs[j]=-Math.hypot(rr[j]-mR,gg[j]-mG,bb[j]-mB);
+  const bg=0;
+  const nx=Math.round(p.x-.13*bw)-x0,ny=Math.round(.22*bw),ex=Math.round(.12*bw),ey=Math.round(.92*bw);
+  const inZone=(x,y)=>x>=ex&&y<ey&&!(y<ny&&x>=nx);
+  const dk=[];
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(inZone(x,y))dk.push(bg-gs[y*w+x]);
+  dk.sort((a,b)=>a-b);
+  const thr=Math.max(38,.4*dk[Math.floor(.995*(dk.length-1))]);
+  const m=new Uint8Array(w*h);
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(inZone(x,y)&&bg-gs[y*w+x]>thr)m[y*w+x]=1;
+  const d=new Uint8Array(w*h);
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(m[y*w+x]||(x>0&&m[y*w+x-1])||(y>0&&m[(y-1)*w+x])||(x>0&&y>0&&m[(y-1)*w+x-1]))d[y*w+x]=1;
+  const lab=new Int32Array(w*h),comps=[];let id=0;
+  for(let s0=0;s0<w*h;s0++){
+    if(!d[s0]||lab[s0])continue;id++;const st=[s0];lab[s0]=id;let a=0,cx0=w,cx1=-1,cy0=h,cy1=-1;
+    while(st.length){const q=st.pop(),qx=q%w,qy=(q/w)|0;a++;if(qx<cx0)cx0=qx;if(qx>cx1)cx1=qx;if(qy<cy0)cy0=qy;if(qy>cy1)cy1=qy;
+      for(let dy=-1;dy<=1;dy++)for(let dx=-1;dx<=1;dx++){const nx2=qx+dx,ny2=qy+dy;if(nx2<0||ny2<0||nx2>=w||ny2>=h)continue;const nq=ny2*w+nx2;if(d[nq]&&!lab[nq]){lab[nq]=id;st.push(nq)}}}
+    const cw=cx1-cx0+1,ch=cy1-cy0+1;
+    if(a>=.0053*bw*bw&&ch>=.13*bw&&!(cw<.2*bw&&ch>.6*bw)&&!(a/(cw*ch)>.6&&ch>.25*bw))comps.push({id,x:cx0,y:cy0,w:cw,h:ch});
+  }
+  const out={lines:[],alts:[],dv:[],box:[x0,y0,w,h]};
+  if(!comps.length)return out;
+  const mh=comps.map(c=>c.h).sort((a,b)=>a-b)[comps.length>>1];
+  comps.sort((a,b)=>(a.y+a.h/2)-(b.y+b.h/2));
+  const lines=[];
+  comps.forEach(c=>{const cy=c.y+c.h/2,L=lines[lines.length-1];if(L&&Math.abs(cy-L.cy)<mh*.7)L.items.push(c);else lines.push({cy,items:[c]})});
+  lines.forEach(L=>{
+    L.items.sort((a,b)=>a.x-b.x);const ds=[];
+    L.items.forEach(c=>{
+      let parts=[[c.x,c.x+c.w]];
+      if(c.w>.85*c.h&&c.w>.2*bw){
+        const col=[];for(let x=0;x<c.w;x++){let s=0;for(let y=c.y;y<c.y+c.h;y++)if(lab[y*w+c.x+x]===c.id)s++;col.push(s)}
+        const lo=Math.floor(c.w*.3),hiI=Math.floor(c.w*.7);let cut=lo;for(let x=lo;x<hiI;x++)if(col[x]<col[cut])cut=x;
+        parts=[[c.x,c.x+cut],[c.x+cut,c.x+c.w]];
+      }
+      parts.forEach(([a0,a1])=>{
+        const pw=a1-a0;if(pw<2)return;const sub=new Float32Array(pw*c.h);
+        for(let y=0;y<c.h;y++)for(let x=0;x<pw;x++)sub[y*pw+x]=lab[(c.y+y)*w+a0+x]===c.id?1:0;
+        const v=norm8(sub,pw,c.h);if(v){const v16=normN(sub,pw,c.h,16);ds.push({...classifyDigit(v,v16),vec:v16})}
+      });
+    });
+    const good=ds.filter(q=>q.p>=MINP);
+    if(!good.length)return;
+    const str=good.map(q=>q.d).join('');
+    let wi=0;good.forEach((q,i)=>{if(q.p<good[wi].p)wi=i});
+    const altS=good.map((q,i)=>i===wi?q.d2:q.d).join('');
+    out.lines.push(str);if(altS!==str)out.alts.push(altS);
+    if(out.lines.length===1)out.dv=good.map(q=>Array.from(q.vec));
+  });
+  return out;
+}
+function readCard(P,words,orient,grids){
+  const rows=[];
+  (grids||findGrids(words)).forEach(g=>{
+    let lo=g.n0;if(lo<=3)lo=1;
+    for(let v=lo;v<=g.n1;v++){
+      const p={x:g.mx+g.bw*(v-g.mv),y:g.my+g.by*(v-g.mv)},r=readCell(P,p,g.bw);
+      let img=null;
+      if(P.cv&&r.box[2]>0&&r.box[3]>0){const sc=Math.min(1,150/r.box[2]),c=document.createElement('canvas');c.width=Math.max(1,Math.round(r.box[2]*sc));c.height=Math.max(1,Math.round(r.box[3]*sc));c.getContext('2d').drawImage(P.cv,r.box[0],r.box[1],r.box[2],r.box[3],0,0,c.width,c.height);img=c.toDataURL('image/jpeg',.7)}
+      rows.push({b:String(v),v:r.lines[0]||'',dv:r.dv||[],o:orient,alt:[...r.alts.slice(0,1),...r.lines.slice(1),...r.alts.slice(1)].filter((x,i,ar)=>x!==(r.lines[0]||'')&&ar.indexOf(x)===i).slice(0,3),img});
+    }
+  });
+  return rows.sort((a,b)=>a.b-b.b);
+}
+const circLabel=n=>/^\d+$/.test(n)?'Circuit '+n:n;
+function parseCircuitRows(rows,defName){
+  const out={};
+  rows.forEach(r=>{
+    if(!r||!r.length)return;
+    r=r.map(c=>String(c==null?'':c).trim());
+    let name=defName,off=0;
+    if(r.length>=6&&r[5]!==''&&!isNaN(parseInt(r[1],10))){name=r[0]||defName;off=1}
+    const num=parseInt(r[off],10);if(isNaN(num))return;
+    (out[name]=out[name]||{})[num]={haut:normCode(r[off+1]),bas:normCode(r[off+2]),gauche:normCode(r[off+3]),droite:normCode(r[off+4])};
+  });
+  return out;
+}
+async function importCircuits(C,file){
+  const ext=(file.name.split('.').pop()||'').toLowerCase(),found={};
+  if(ext==='csv'){
+    const text=await file.text();
+    Object.assign(found,parseCircuitRows(text.split(/\r?\n/).filter(l=>l.trim()).map(l=>l.split(/[;,]/)),file.name.replace(/\.[^.]+$/,'')));
+  } else {
+    const XLSX=await loadXLSX();
+    const wb=XLSX.read(await file.arrayBuffer(),{type:'array'});
+    wb.SheetNames.forEach(sn=>Object.assign(found,parseCircuitRows(XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,raw:false,defval:''}),sn)));
+  }
+  C.circuits=C.circuits||{};let n=0;
+  for(const k in found){if(Object.keys(found[k]).length){C.circuits[k]=found[k];n++}}
+  save();return n;
+}
+function evalRow(C,r){
+  if(!r.b)return null;
+  const ans=((C.circuits||{})[cor&&cor.circuit]||{})[parseInt(r.b,10)];
+  if(!ans)return '?';
+  return r.v!==''&&normCode(r.v)===ans[r.o]?'ok':'ko';
+}
+const emptyRows=(n,o)=>Array.from({length:n},(_,i)=>({b:String(i+1),v:'',o}));
+function openCor(run){
+  const C=curClass();C.circuits=C.circuits||{};
+  const ci=[run.corr&&run.corr.circuit,C.lastCircuit].find(k=>k&&C.circuits[k])||Object.keys(C.circuits)[0]||'';
+  openFolders.add('k-'+dateKeyOf(run.start));
+  cor={run,step:'photo',rows:[],orient:'haut',img:null,note:'',circuit:ci,P:null,taps:[],count:10};renderCor();
+}
+function renderCor(){
+  const el=$('#cor');el.replaceChildren();
+  const C=curClass();if(!C)return;
+  if(cor&&!C.runs.includes(cor.run))cor=null;
+  if(cor){renderCorScan(el,C);return}
+  C.circuits=C.circuits||{};
+  const names=Object.keys(C.circuits);
+  const msg=h('p',{class:'hint'},'');
+  const file=h('input',{type:'file',accept:'.xlsx,.xls,.csv'});
+  file.onchange=async()=>{
+    if(!file.files[0])return;
+    msg.textContent='Import en cours…';
+    try{const n=await importCircuits(C,file.files[0]);if(n)renderCor();else msg.textContent='Aucune balise trouvée dans ce fichier.'}
+    catch(e){msg.textContent='Import impossible (fichier .xlsx : connexion internet nécessaire la première fois ; sinon exporte en .csv).'}
+  };
+  const card=h('div',{class:'card imp'},h('h2',{},'📋 Corrections des circuits'),
+    h('p',{class:'hint'},'Fichier .xlsx (une feuille par circuit, le nom de la feuille donne le nom du circuit) ou .csv. Une ligne par balise : numéro, haut, bas, gauche, droite. Un seul tableau peut aussi regrouper plusieurs circuits : mets alors le nom du circuit en première colonne.'),
+    h('div',{class:'row'},file),msg);
+  if(!names.length)card.append(h('p',{class:'hint'},'Aucun circuit chargé.'));
+  names.forEach(n=>{
+    const del=h('button',{class:'x',style:'margin-left:auto'},'✕');
+    arm(del,'✕',()=>{delete C.circuits[n];save();renderCor()});
+    card.append(h('div',{class:'baliserow'},h('b',{},circLabel(n)),h('span',{class:'hint'},Object.keys(C.circuits[n]).length+' balises'),del));
+  });
+  el.append(card);
+  const lmsg=h('p',{class:'hint'},'');
+  const lfile=h('input',{type:'file',accept:'.json'});
+  lfile.onchange=async()=>{
+    try{const a=JSON.parse(await lfile.files[0].text());let n=0;
+      a.forEach(x=>{if(x&&x.v&&x.v.length===256&&x.d>=0&&x.d<=10){PD.push({v:x.v,d:x.d});n++}});savePD();renderCor()}
+    catch(e){lmsg.textContent='Fichier illisible.'}
+  };
+  const lexp=h('button',{class:'b sec',on:async()=>{
+    const data=JSON.stringify(PD);
+    try{const dl=await claude.use('downloads');if(!dl)throw 0;await dl.save({filename:'apprentissage-chiffres.json',data});lmsg.textContent='Fichier enregistré.'}
+    catch(e){if(e&&e.code==='declined')return;try{await navigator.clipboard.writeText(data);lmsg.textContent='Copié dans le presse-papiers (à coller dans un fichier .json).'}catch(_){lmsg.textContent='Export indisponible sur cet appareil.'}}
+  }},'Exporter');
+  const lrst=h('button',{class:'b sec'},'Réinitialiser');
+  arm(lrst,'Réinitialiser',()=>{PD=[];savePD();renderCor()});
+  el.append(h('div',{class:'card imp',style:'margin-top:10px'},h('h2',{},'🧠 Apprentissage'),
+    h('p',{class:'hint'},PD.length?PD.length+' chiffres mémorisés à partir de tes corrections : plus tu enregistres de cartons corrigés, mieux l’appli lit ton écriture.':'Aucun chiffre mémorisé pour le moment : l’appli apprend à chaque correction enregistrée.'),
+    h('div',{class:'row'},lexp,lrst),h('p',{class:'hint'},'Importer une sauvegarde :'),h('div',{class:'row'},lfile),lmsg));
+  const runs=C.runs.filter(r=>r.end!=null&&C.students.some(s=>s.id===r.sid)).sort((a,b)=>b.start-a.start);
+  el.append(h('h2',{},'Cartons à corriger'));
+  if(!runs.length){el.append(h('p',{class:'hint'},'Aucun temps de chrono enregistré pour le moment.'));return}
+  const byDay={};
+  runs.forEach(r=>{(byDay[dateKeyOf(r.start)]=byDay[dateKeyOf(r.start)]||[]).push(r)});
+  Object.keys(byDay).sort((a,b)=>b.localeCompare(a)).forEach(key=>{
+    const day=byDay[key],bySid={};
+    day.forEach(r=>{(bySid[r.sid]=bySid[r.sid]||[]).push(r)});
+    const list=Object.values(bySid).map(rs=>({s:C.students.find(x=>x.id===rs[0].sid),rs:rs.sort((a,b)=>a.start-b.start)})).sort((a,b)=>a.s.name.localeCompare(b.s.name,'fr'));
+    const todo=day.filter(r=>!r.corr).length,fkey='k-'+key;
+    el.append(folderBtn(fkey,dateLabelOf(key),day.length+' départ'+(day.length>1?'s':'')+(todo?' · '+todo+' à corriger':' · tout corrigé'),renderCor));
+    if(!openFolders.has(fkey))return;
+    list.forEach(({s,rs})=>{
+      const card=h('div',{class:'card',style:'margin-bottom:8px'},h('div',{class:'nm'},s.name));
+      rs.forEach((r,i)=>{
+        const d=new Date(r.start);
+        card.append(h('div',{class:'etcard',style:'border-top:1px solid var(--bd);padding-top:6px'},
+          h('div',{class:'hint',style:'flex:1'},(rs.length>1?'Départ '+(i+1)+' · ':'')+pad(d.getHours())+':'+pad(d.getMinutes())+' · '+fmt(dur(r))+(r.corr?' · ✓'+r.corr.ok+' ✗'+r.corr.ko:' · à corriger')),
+          h('button',{class:'b'+(r.corr?' sec':''),on:()=>openCor(r)},r.corr?'Refaire':'📷 Scanner')));
+      });
+      el.append(card);
+    });
+  });
+}
+/* ---------- Dictée vocale des réponses ---------- */
+let rec=null,dictHook=null;
+function stopDict(){if(rec){const r=rec;rec=null;try{r.stop()}catch(e){}}}
+const EMP=new Set(['rien','croix','vide','neant','aucun','aucune','x']);
+function frNum(t,i){
+  const U={zero:0,un:1,une:1,deux:2,trois:3,quatre:4,cinq:5,six:6,sept:7,huit:8,neuf:9,dix:10,onze:11,douze:12,treize:13,quatorze:14,quinze:15,seize:16},T={vingt:20,vingts:20,trente:30,quarante:40,cinquante:50,soixante:60};
+  const d17=u=>u===10&&['sept','huit','neuf'].includes(t[j]);
+  let j=i,v=0,got=false;
+  if(t[j] in U&&U[t[j]]>=2&&U[t[j]]<=9&&(t[j+1]==='cent'||t[j+1]==='cents')){v=U[t[j]]*100;j+=2;got=true}
+  else if(t[j]==='cent'||t[j]==='cents'){v=100;j++;got=true}
+  const x=t[j];let base=null;
+  if(x==='quatre'&&(t[j+1]==='vingt'||t[j+1]==='vingts')){base=80;j+=2}
+  else if(x in T){base=T[x];j++}
+  if(base!==null){
+    got=true;v+=base;
+    if(t[j]==='et'&&['un','une','onze'].includes(t[j+1]))j++;
+    const y=t[j],max=(base===60||base===80)?16:9;
+    if(y in U&&U[y]>=1&&U[y]<=max){let u=U[y];j++;if(d17(u)){u+=U[t[j]];j++}v+=u}
+  } else if(x in U){let u=U[x];j++;if(d17(u)){u+=U[t[j]];j++}v+=u;got=true}
+  return got?[String(v),j]:null;
+}
+function parseDict(txt){
+  const t=txt.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[-,.;:!?']/g,' ').split(/\s+/).filter(Boolean),out=[];
+  for(let i=0;i<t.length;){
+    const w=t[i];
+    if(EMP.has(w)){out.push('');i++;continue}
+    if(/^\d+$/.test(w)){out.push(w);i++;continue}
+    const r=frNum(t,i);if(r){out.push(r[0]);i=r[1]}else i++;
+  }
+  return out;
+}
+function startDict(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR)return 'Dictée non disponible sur ce navigateur (essaie Chrome ou Safari).';
+  stopDict();
+  const r=new SR();r.lang='fr-FR';r.continuous=true;r.interimResults=false;rec=r;
+  cor.dictIdx=0;
+  r.onresult=e=>{
+    if(rec!==r||!cor){stopDict();return}
+    for(let i=e.resultIndex;i<e.results.length;i++){
+      if(!e.results[i].isFinal)continue;
+      parseDict(e.results[i][0].transcript).forEach(v=>{
+        if(cor.dictIdx<cor.rows.length){const k=cor.dictIdx++;cor.rows[k].v=v;cor.rows[k].alt=[];if(dictHook)dictHook(k)}
+      });
+    }
+    if(cor.dictIdx>=cor.rows.length){stopDict();if(dictHook)dictHook(-1)}
+  };
+  r.onerror=e=>{if(rec===r&&(e.error==='not-allowed'||e.error==='service-not-allowed')){rec=null;if(dictHook)dictHook(-2)}};
+  r.onend=()=>{if(rec===r){if(cor&&cor.dictIdx<cor.rows.length){try{r.start();return}catch(e){}}rec=null;if(dictHook)dictHook(-1)}};
+  try{r.start()}catch(e){rec=null;return 'Impossible de démarrer le micro.'}
+  return '';
+}
+function renderCorScan(el,C){
+  const run=cor.run,s=C.students.find(x=>x.id===run.sid);
+  el.append(h('button',{class:'x',on:()=>{stopDict();cor=null;renderCor()}},'← Retour à la liste'),h('h2',{},'📝 '+(s?s.name:'')+' · '+fmt(dur(run))));
+  const ks=Object.keys(C.circuits||{});
+  if(!ks.length)el.append(h('p',{class:'hint'},'⚠️ Aucune correction chargée : retourne à la liste pour importer le fichier.'));
+  else{
+    const sel=h('select',{});
+    ks.forEach(k=>sel.append(h('option',{value:k},circLabel(k))));
+    sel.value=cor.circuit;
+    sel.onchange=()=>{cor.circuit=sel.value;if(cor.step==='review')renderCor()};
+    el.append(h('div',{class:'row'},h('span',{class:'hint'},'Circuit du carton :'),sel));
+  }
+  if(cor.step==='photo'){
+    const st=h('p',{class:'hint'},'');
+    const inp=h('input',{type:'file',accept:'image/*',capture:'environment'});
+    inp.onchange=async()=>{
+      const f=inp.files[0];if(!f)return;
+      const mine=cor;let P=null;
+      try{st.textContent='Préparation de l’image…';P=await prepImage(f);mine.img=P.url;mine.P=P}
+      catch(e){mine.rows=emptyRows(10,mine.orient);mine.note='Image illisible : saisis les nombres à la main.';mine.step='review';if(cor===mine)renderCor();return}
+      let rows=[],err=false;
+      try{
+        st.textContent='Repérage des cases… (internet nécessaire la première fois, patiente un peu)';
+        const w=await getWorker();const r=await w.recognize(P.cv);
+        rows=readCard(P,wordsOf(r.data),mine.orient);
+      }catch(e){err=true}
+      if(cor!==mine)return;
+      if(rows.length){mine.rows=rows;mine.note='Lecture automatique de l’écriture : elle reste approximative, compare chaque nombre avec l’image de sa case.';mine.step='review'}
+      else{mine.taps=[];mine.note=err?'Repérage automatique indisponible (internet ?). Place la grille à la main :':'Les cases n’ont pas été repérées automatiquement. Place la grille à la main :';mine.step='align'}
+      renderCor();
+    };
+    el.append(h('p',{class:'hint'},'Photographie la rangée de cases à plat, de face, avec une bonne lumière (les numéros de balise doivent être bien visibles).'),h('div',{class:'row'},inp),st,
+      h('div',{class:'row'},h('button',{class:'b sec',on:()=>{cor.rows=emptyRows(10,cor.orient);cor.step='review';renderCor()}},'Saisir à la main')));
+    return;
+  }
+  if(cor.step==='align'){
+    const P=cor.P,n=cor.taps.length;
+    if(cor.note)el.append(h('p',{class:'hint'},cor.note));
+    el.append(h('p',{class:'hint'},n===0?'① Touche le petit numéro imprimé de la 1ʳᵉ case (en haut à droite de la case).':n===1?'② Touche le petit numéro imprimé de la dernière case.':'Vérifie les deux repères, indique le nombre de cases, puis lis la grille.'));
+    const wrap=h('div',{style:'position:relative'}),im=h('img',{src:cor.img,style:'width:100%;display:block;border-radius:10px'});
+    wrap.append(im);
+    cor.taps.forEach(t=>wrap.append(h('div',{style:'position:absolute;pointer-events:none;width:26px;height:26px;margin:-13px 0 0 -13px;border:3px solid #e8720c;border-radius:50%;background:rgba(232,114,12,.3);left:'+(t.x/P.W*100)+'%;top:'+(t.y/P.H*100)+'%'})));
+    wrap.onclick=e=>{if(cor.taps.length>=2)return;const r=im.getBoundingClientRect();cor.taps.push({x:(e.clientX-r.left)/r.width*P.W,y:(e.clientY-r.top)/r.height*P.H});renderCor()};
+    el.append(wrap);
+    const cnt=h('input',{type:'text',inputmode:'numeric',style:'max-width:70px'});cnt.value=String(cor.count||10);
+    cnt.oninput=()=>{cor.count=parseInt(cnt.value,10)||10};
+    el.append(h('div',{class:'row'},h('span',{class:'hint'},'Nombre de cases :'),cnt,
+      h('button',{class:'b sec',on:()=>{cor.taps=[];renderCor()}},'Recommencer'),
+      h('button',{class:'b',on:()=>{
+        if(cor.taps.length<2)return;
+        const t=cor.taps.slice().sort((a,b)=>a.x-b.x),N=Math.max(2,cor.count||10);
+        cor.rows=readCard(P,[],cor.orient,[gridFromTaps(t[0],t[1],N)]);
+        cor.note='Grille placée à la main : compare chaque nombre avec l’image de sa case.';cor.step='review';renderCor();
+      }},'Lire la grille')));
+    el.append(h('div',{class:'row'},h('button',{class:'b sec',on:()=>{if(!cor.rows.length)cor.rows=emptyRows(10,cor.orient);cor.step='review';renderCor()}},'Saisir à la main')));
+    return;
+  }
+  if(cor.note)el.append(h('p',{class:'hint'},cor.note));
+  if(cor.img)el.append(h('img',{src:cor.img,style:'max-width:100%;max-height:200px;border-radius:10px;display:block;margin:6px 0'}));
+  if(cor.P)el.append(h('div',{class:'row'},h('button',{class:'b sec',on:()=>{cor.step='align';cor.taps=[];renderCor()}},'📐 Repositionner la grille')));
+  const or=h('div',{class:'row'},h('span',{class:'hint'},'Direction du carton :'));
+  ORD.forEach(o=>or.append(h('button',{class:'b'+(cor.orient===o?'':' sec'),style:'padding:8px 14px',on:()=>{cor.orient=o;cor.rows.forEach(r=>r.o=o);renderCor()}},ARW[o])));
+  const dmsg=h('p',{class:'hint'},'');
+  const dbtn=h('button',{class:'b'},rec?'⏹ Arrêter la dictée':'🎤 Dicter les réponses');
+  dbtn.onclick=()=>{
+    if(rec){stopDict();dictHook(-1);return}
+    const e=startDict();
+    if(e){dmsg.textContent=e;return}
+    dbtn.textContent='⏹ Arrêter la dictée';dmsg.textContent='Dicte de la balise 1 à la dernière, sans pause. Dis « rien » ou « croix » pour une case vide.';
+  };
+  const dictRow=h('div',{},h('div',{class:'row'},dbtn),dmsg);
+  el.append(or,dictRow,h('p',{class:'hint'},'Corrige les nombres mal lus. La flèche d’une ligne change sa direction.'));
+  el.append(h('div',{class:'corrow hint'},h('span',{},'Balise'),h('span',{},'Dir.'),h('span',{},'Lu'),h('span',{}),h('span',{})));
+  const badges=[],vin=[],tot=h('div',{class:'verdict'},'');
+  const upd=()=>{
+    let ok=0,ko=0,un=0;
+    cor.rows.forEach((r,i)=>{const e=evalRow(C,r);badges[i].textContent=e==='ok'?'✅':e==='ko'?'❌':e==='?'?'❓':'';if(e==='ok')ok++;else if(e==='ko')ko++;else if(e==='?')un++});
+    tot.textContent='✓ '+ok+' juste'+(ok>1?'s':'')+' · ✗ '+ko+' fausse'+(ko>1?'s':'')+(un?' · ❓ '+un+' inconnue'+(un>1?'s':''):'');
+    tot.className='verdict '+(ko?'bad':'ok');
+  };
+  cor.rows.forEach((r,i)=>{
+    const b=h('input',{type:'text',inputmode:'numeric'});b.value=r.b;b.oninput=()=>{r.b=b.value.replace(/\D/g,'');upd()};
+    const o=h('button',{class:'x',style:'font-size:22px;text-align:center'},ARW[r.o]);
+    o.onclick=()=>{r.o=ORD[(ORD.indexOf(r.o)+1)%4];o.textContent=ARW[r.o];upd()};
+    const v=h('input',{type:'text',inputmode:'numeric'});v.value=r.v;v.oninput=()=>{r.v=v.value.replace(/\D/g,'');upd()};
+    const bd=h('span',{});badges.push(bd);vin.push(v);
+    if(r.img)el.append(h('img',{src:r.img,style:'height:62px;display:block;border-radius:8px;margin:6px 0 2px'}));
+    el.append(h('div',{class:'corrow'},b,o,v,bd,h('button',{class:'x',on:()=>{cor.rows.splice(i,1);renderCor()}},'✕')));
+    if(r.alt&&r.alt.length){const al=h('div',{class:'row',style:'margin:-2px 0 8px'},h('span',{class:'hint'},'autre lecture :'));
+      r.alt.forEach(a=>al.append(h('button',{class:'b sec',style:'padding:4px 10px',on:()=>{r.alt=r.alt.filter(z=>z!==a);if(r.v)r.alt.push(r.v);r.v=a;renderCor()}},a)));
+      el.append(al)}
+  });
+  el.append(tot,h('div',{class:'row'},
+    h('button',{class:'b sec',on:()=>{cor.rows.push({b:'',v:'',o:cor.orient});renderCor()}},'+ Ligne'),
+    h('button',{class:'b',on:()=>{
+      let ok=0,ko=0;const rows=[];
+      cor.rows.forEach(r=>{const e=evalRow(C,r);if(!e)return;if(e==='ok')ok++;else if(e==='ko')ko++;rows.push({b:r.b,o:r.o,v:r.v,ok:e==='ok'})});
+      stopDict();learnFrom(cor.rows);cor.run.corr={ok,ko,rows,circuit:cor.circuit,at:Date.now()};C.lastCircuit=cor.circuit;save();cor=null;renderCor();
+    }},'Enregistrer la correction')));
+  dictHook=k=>{
+    if(k>=0&&vin[k]){vin[k].value=cor.rows[k].v;upd();dmsg.textContent='Case '+(k+1)+' / '+cor.rows.length+' : '+(cor.rows[k].v||'vide')}
+    else{dbtn.textContent='🎤 Dicter les réponses';dmsg.textContent=k===-2?'Micro refusé : autorise-le dans les réglages du navigateur.':'Dictée terminée : vérifie les nombres.'}
+  };
+  upd();
+}
+
+/* ---------- Élèves ---------- */
+function renderEls(){
+  const el=$('#els');el.replaceChildren();
+  const C=curClass();if(!C)return;
+  const ta=h('textarea',{placeholder:'Un prénom par ligne'});ta.value=C.students.map(s=>s.name).join('\n');
+  const msg=h('p',{class:'hint'},'');
+  const saveList=()=>{
+    const names=[...new Set(ta.value.split('\n').map(x=>x.trim()).filter(Boolean))];
+    const old=C.students;
+    C.students=names.map(n=>old.find(o=>o.name===n)||{id:'s'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name:n});
+    const ids=new Set(C.students.map(s=>s.id));C.runs=C.runs.filter(r=>ids.has(r.sid));C.etoile.runs=C.etoile.runs.filter(r=>ids.has(r.sid));
+    save();msg.textContent=names.length+' élèves enregistrés.';
+  };
+  const ok=h('button',{class:'b',on:saveList},'Enregistrer la liste');
+  const srt=h('button',{class:'b sec',on:()=>{
+    ta.value=ta.value.split('\n').map(x=>x.trim()).filter(Boolean).sort((a,b)=>a.localeCompare(b,'fr',{sensitivity:'base'})).join('\n');
+    saveList();msg.textContent='Liste triée par ordre alphabétique et enregistrée.';
+  }},'Trier A → Z');
+  const clr=h('button',{class:'b sec'},'Effacer tous les temps');
+  const undo=h('button',{class:'b sec'},'↩ Annuler « Effacer tous les temps »');
+  undo.hidden=!C.undo;
+  arm(clr,'Effacer tous les temps',()=>{
+    C.undo={resetAt:C.resetAt||0,live:C.runs.filter(r=>r.end==null),elive:C.etoile.runs.filter(r=>r.end==null)};
+    C.runs=C.runs.filter(r=>r.end!=null);C.etoile.runs=C.etoile.runs.filter(r=>r.end!=null);
+    C.resetAt=Date.now();save();undo.hidden=false;
+    msg.textContent='Chronos réinitialisés (résultats et corrections conservés).';
+  });
+  undo.onclick=()=>{
+    const u=C.undo;if(!u)return;
+    C.resetAt=u.resetAt;
+    u.live.forEach(r=>{if(!live(C,r.sid))C.runs.push(r)});
+    u.elive.forEach(r=>{if(!etLive(C,r.sid))C.etoile.runs.push(r)});
+    C.undo=null;save();undo.hidden=true;
+    msg.textContent='Réinitialisation annulée.';
+  };
+  el.append(h('p',{class:'hint'},'Un prénom par ligne. Les temps déjà enregistrés sont conservés pour les prénoms qui restent.'),ta,h('div',{class:'row'},ok,srt,clr,undo),msg,
+    h('p',{class:'hint'},'Les données sont stockées sur cet appareil, séparément pour chaque classe : utilise toujours le même téléphone ou la même tablette, et exporte en CSV pour garder une copie.'));
+}
+
+/* ---------- Navigation ---------- */
+function show(v){
+  view=v;
+  renderSubnav();
+  ['home','chrono','etoile','cor','res','els'].forEach(i=>$('#'+i).hidden=i!==v);
+  ({home:renderHome,chrono:renderChrono,etoile:renderEtoile,cor:renderCor,res:renderRes,els:renderEls})[v]();
+}
+show('home');
+setInterval(()=>{if(view==='chrono'||view==='etoile'){const C=curClass();document.querySelectorAll('[data-start]').forEach(e=>{const ms=Date.now()-e.dataset.start;e.textContent=fmt(ms);if(view==='chrono'&&C&&C.limit){const cd=e.closest('.card');if(cd)cd.classList.toggle('over',ms>C.limit)}})}},100);
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol)){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+</script>
+</body>
+</html>
